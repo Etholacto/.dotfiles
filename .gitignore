@@ -1,0 +1,23 @@
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore zsh history
+.zsh_history
+
+# Ignore neovim swap, backup, and undo files
+*.swp
+*.swo
+*.un~
+*.bak
+
+# Ignore tmux temporary files (if any are generated)
+.tmux.conf.local
+.tmux.conf.bak
+
+# Ignore WezTerm config backups (if any)
+wezterm.lua.bak
+
+# Optional: ignore custom logs or backups created manually
+*.log
+*.bak
