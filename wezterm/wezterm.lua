@@ -7,6 +7,9 @@ wezterm.on("gui-startup", function ()
    window:gui_window():maximize()
 end)
 
+-- Detect if the system is running Windows
+local is_windows = wezterm.target_triple:match("windows")
+
 return{
    color_scheme = 'Kanagawa (Gogh)',
    enable_tab_bar = false,
