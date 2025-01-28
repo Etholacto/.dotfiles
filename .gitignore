@@ -10,6 +10,7 @@ Thumbs.db
 *.swo
 *.un~
 *.bak
+lazy-lock.json
 
 # Ignore tmux temporary files (if any are generated)
 .tmux.conf.local
