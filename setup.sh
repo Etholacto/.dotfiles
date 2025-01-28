@@ -7,7 +7,6 @@ handle_symlink() {
    local target=$1
    local symlink=$2
    local filename=$3
-   echo "$target, $symlink, $filename"
 
    if [ -L "$symlink/$filename" ]; then
       if [[ "$(readlink "$symlink/$filename")" == "$target" ]]; then
@@ -98,14 +97,13 @@ for entry in "$(pwd)"/*; do
    #Get the filename of each target
    filename=$(basename "$entry")
 
-   #Skip the script itself
-   if [[ "$filename" != "setup.sh" ]]; then
+   #Skip the script itself and the README
+   if [[ "$filename" != "setup.sh" && "$filename" != "README.md" ]]; then
       #Handle all files in .dotfiles
       handle_symlink "$entry" "$HOME/.config" "$filename"
 
       #Additional file handling for .zshenv
       if [[ "$filename" = "zsh" ]]; then
-         echo "If .zshenv is missing zsh config might not work properly"
          handle_symlink "$entry/.zshenv" "$HOME" ".zshenv"
       fi
    fi

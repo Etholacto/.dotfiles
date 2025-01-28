@@ -46,6 +46,7 @@ bindkey '^n' history-search-forward
 HISTFILE="$ZDOTDIR/.zsh_history"
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/ohmyzsh"
 ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump"
+export FZF_BASE=/usr/local/opt/fzf
 
 #History
 HISTSIZE=5000
