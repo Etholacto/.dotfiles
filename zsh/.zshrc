@@ -33,8 +33,12 @@ autoload -Uz compinit && compinit
 _comp_options+=(globdots)
 zinit cdreplay -q
 
+## case insensitive path-completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+
 #Keybinds
-bindkey -e
+bindkey -v
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 

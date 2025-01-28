@@ -12,6 +12,10 @@ opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
 opt.wrap = false -- disable line wrapping
 
+-- prevent automatic line breaking
+opt.textwidth = 0
+opt.formatoptions = "jrol"
+
 opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
 
