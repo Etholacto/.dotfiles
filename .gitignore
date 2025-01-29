@@ -2,23 +2,22 @@
 .DS_Store
 Thumbs.db
 
-# Ignore zsh history
+# Ignore zsh
 .zsh_history
 
-# Ignore neovim swap, backup, and undo files
+# Ignore neovim
 *.swp
 *.swo
 *.un~
 *.bak
 lazy-lock.json
 
-# Ignore tmux temporary files (if any are generated)
+# Ignore tmux
 .tmux.conf.local
 .tmux.conf.bak
 
-# Ignore WezTerm config backups (if any)
+# Ignore WezTerm
 wezterm.lua.bak
 
-# Optional: ignore custom logs or backups created manually
-*.log
-*.bak
+#Ignore superfile
+/superfile/theme

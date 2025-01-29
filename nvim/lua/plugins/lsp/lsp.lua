@@ -39,7 +39,6 @@ return {
 					capabilities = capabilities,
 					on_attach = on_attach,
 				}
-
 				if server_name == "clangd" then
 					opts.cmd = { "clangd", "--compile-commands-dir=_project" }
 				elseif server_name == "lua_ls" then
@@ -51,7 +50,6 @@ return {
 						},
 					}
 				end
-
 				require("lspconfig")[server_name].setup(opts)
 			end,
 		})
