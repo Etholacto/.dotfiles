@@ -19,7 +19,6 @@ return {
             'codelldb',
             'javadbg',
             'javatest',
-            'js',
             'python',
          },
          handlers = {},

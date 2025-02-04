@@ -26,6 +26,7 @@ return {
 				"lua_ls",
 				"jdtls",
 				"jsonls",
+				"glsl_analyzer",
 				"omnisharp",
 				"pylsp",
 			},

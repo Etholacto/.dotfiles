@@ -7,7 +7,7 @@ opt.scrolloff = 10 -- minimum number of lines to keep above and below the cursor
 opt.tabstop = 3 -- 3 spaces for tabs (prettier default)
 opt.shiftwidth = 3 -- 3 spaces for indent width
 opt.softtabstop = 3 -- 3 number of spaces tab counts for while editing
-opt.expandtab = true -- expand tab to spaces
+opt.expandtab = false -- expand tab to spaces
 
 opt.autoindent = true -- copy indent from current line when starting new one
 opt.wrap = false -- disable line wrapping

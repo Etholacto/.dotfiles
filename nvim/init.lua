@@ -21,6 +21,12 @@ if gdproject then
    vim.fn.serverstart './godothost'
 end
 
+--Changes all GLSL type files to correct filetype
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = {"*.vert", "*.frag", "*.comp", "*.rchit", "*.rmiss", "*.rahit"},
+    command = "set filetype=glsl"
+})
+
 -- This has to be set before initializing lazy
 vim.g.mapleader = " "
 
