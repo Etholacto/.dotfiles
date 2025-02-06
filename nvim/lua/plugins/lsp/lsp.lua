@@ -35,22 +35,24 @@ return {
 		-- Attach capabilities and keybinds in attach
 		mason_lspconfig.setup_handlers({
 			function(server_name)
-				local opts = {
-					capabilities = capabilities,
-					on_attach = on_attach,
-				}
-				if server_name == "clangd" then
-					opts.cmd = { "clangd", "--compile-commands-dir=_project" }
-				elseif server_name == "lua_ls" then
-					opts.settings = {
-						Lua = {
-							workspace = { checkThirdParty = false },
-							telemetry = { enable = false },
-							diagnostics = { globals = { "vim" } },
-						},
+				if server_name ~= "jdtls" then
+					local opts = {
+						capabilities = capabilities,
+						on_attach = on_attach,
 					}
+					if server_name == "clangd" then
+						opts.cmd = { "clangd", "--compile-commands-dir=_project" }
+					elseif server_name == "lua_ls" then
+						opts.settings = {
+							Lua = {
+								workspace = { checkThirdParty = false },
+								telemetry = { enable = false },
+								diagnostics = { globals = { "vim" } },
+							},
+						}
+					end
+					require("lspconfig")[server_name].setup(opts)
 				end
-				require("lspconfig")[server_name].setup(opts)
 			end,
 		})
 

@@ -8,25 +8,9 @@ return {
       }
     },
   },
-  {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-  },
-  {
-    "utilyre/barbecue.nvim",
-    version = "*",
-    dependencies = {
-      "SmiteshP/nvim-navic",
-      "nvim-tree/nvim-web-devicons",
-    },
-    opts = {
-      theme = "auto",
-    },
-  },
   { 'mbbill/undotree',
     vim.keymap.set('n', '<leader>tu', vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" }),
   },
-  { "voldikss/vim-floaterm" },
   {
      "christoomey/vim-tmux-navigator",
      lazy = false,

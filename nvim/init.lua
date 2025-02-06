@@ -30,7 +30,13 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 -- This has to be set before initializing lazy
 vim.g.mapleader = " "
 
-require("lazy").setup({{import = "plugins"}, {import = "plugins.lsp"}}, {
+require("lazy").setup({
+	spec = {
+		{import = "plugins"},
+		{import = "plugins.lsp"},
+		{import = "plugins.git"},
+		{import = "plugins.lang"},
+	},
    install = {
       colorscheme = { "kanagawa" },
    },

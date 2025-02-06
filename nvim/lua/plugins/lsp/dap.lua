@@ -77,20 +77,6 @@ return {
       }
 
       --Java config
-      dap.adapters.java = function(callback)
-         vim.lsp.buf_request(0, 'vscode.java.startDebugSession', {}, function(err, result)
-            if err then
-               vim.notify('Error starting Java debug session: ' .. err.message, vim.log.levels.ERROR)
-               return
-            end
-            callback({
-               type = 'server',
-               host = '127.0.0.1',
-               port = 5005,
-            })
-         end)
-      end
-
       dap.configurations.java = {
          {
             type = 'java',
