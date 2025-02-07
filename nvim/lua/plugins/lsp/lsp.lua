@@ -1,65 +1,135 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		"williamboman/mason.nvim",
+		{ 'williamboman/mason.nvim', opts = {} },
+		'williamboman/mason-lspconfig.nvim',
+		'WhoIsSethDaniel/mason-tool-installer.nvim',
+		{ 'j-hui/fidget.nvim', opts = {} },
+		'hrsh7th/cmp-nvim-lsp',
 	},
 	config = function()
-		--Turn on and off the Logging done by nvim
-		vim.lsp.set_log_level("debug")
 
-		-- Add keybinds to the attached lsp
-		local on_attach = function(client, bufnr)
-			local tsb = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP: Rename" })
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP: Code Action" })
+		require('mason').setup({
+            ui = {
+                icons = {
+                    package_installed = ' ',
+                    package_pending = ' ',
+                    package_uninstalled = ' ',
+                },
+            },
+        })
 
-			vim.keymap.set("n", "gd", tsb.lsp_definitions, { desc = "LSP: Goto Definition" })
-			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "LSP: Goto Declaration" })
-			vim.keymap.set("n", "gr", tsb.lsp_references, { desc = "LSP: Goto Reference" })
-			vim.keymap.set("n", "gI", tsb.lsp_implementations, { desc = "LSP: Goto Implementation" })
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-		end
+		vim.api.nvim_create_autocmd('LspAttach', {
+			group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+			callback = function(event)
+				local map = function(keys, func, desc, mode)
+					mode = mode or 'n'
+					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+				end
 
-		-- Change the Diagnostic symbols in the sign columns
-		local x = vim.diagnostic.severity
-		vim.diagnostic.config({
-			signs = { text = { [x.ERROR] = "", [x.WARN] = "", [x.INFO] = "", [x.HINT] = "" } },
-		})
+				map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+				map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+				map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+				map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+				map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+				map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+				map("<leader>rn", vim.lsp.buf.rename, '[R]e[n]ame')
+				map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+				map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+				map('<leader>cf', vim.lsp.buf.format, '[C]ode [F]ormat')
+				map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
-		local mason_lspconfig = require("mason-lspconfig")
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
 
-		-- Nvim-cmp supports additional completion capabilities, so broadcast that to servers
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
-		-- Attach capabilities and keybinds in attach
-		mason_lspconfig.setup_handlers({
-			function(server_name)
-				if server_name ~= "jdtls" then
-					local opts = {
-						capabilities = capabilities,
-						on_attach = on_attach,
-					}
-					if server_name == "clangd" then
-						opts.cmd = { "clangd", "--compile-commands-dir=_project" }
-					elseif server_name == "lua_ls" then
-						opts.settings = {
-							Lua = {
-								workspace = { checkThirdParty = false },
-								telemetry = { enable = false },
-								diagnostics = { globals = { "vim" } },
-							},
-						}
-					end
-					require("lspconfig")[server_name].setup(opts)
+				if client and client.server_capabilities.inlayHintProvider then
+					vim.lsp.inlay_hint.enable(true)
+				else
+					vim.lsp.inlay_hint.enable(false)
 				end
 			end,
 		})
 
+		if vim.lsp.inlay_hint then
+			vim.keymap.set('n', '<Space>ih', function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+			end, { desc = 'Toggle Inlay Hints' })
+		end
+
+		vim.diagnostic.config({
+			virtual_text = {
+				prefix = '', -- Could be '●', '▎', │, 'x', '■', , 
+			},
+			jump = {
+				float = true,
+			},
+			float = { border = 'single' },
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = ' ',
+					[vim.diagnostic.severity.WARN] = ' ',
+					[vim.diagnostic.severity.HINT] = '󰌶 ',
+					[vim.diagnostic.severity.INFO] = ' ',
+				},
+				numhl = {
+					[vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+					[vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+					[vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+					[vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+				},
+			},
+		})
+
+		-- Nvim-cmp supports additional completion capabilities, so broadcast that to servers
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+		local servers = {
+			bashls = {},
+			clangd = {
+				cmd = {
+					"clangd"
+				}
+			},
+			lua_ls = {
+				settings = {
+					Lua = {
+						workspace = { checkThirdParty = false },
+						telemetry = { enable = false },
+						diagnostics = { globals = { "vim" } },
+					}
+				}
+			},
+			jdtls = {
+				autostart = false
+			},
+			jsonls = {},
+			glsl_analyzer = {},
+			omnisharp = {},
+			pylsp = {},
+			sqlls = {},
+		}
+
+		local ensure_installed = vim.tbl_keys(servers or {})
+		vim.list_extend(ensure_installed, {
+			'stylua', --Formater Lua
+			'isort', --Formater Python
+			'black', --Formater Python
+		})
+		require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+		require('mason-lspconfig').setup {
+			handlers = {
+				function(server_name)
+					local server = servers[server_name] or {}
+					server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+					require('lspconfig')[server_name].setup(server)
+				end,
+			},
+		}
+
 		-- Can't add 'gdscript' to servers, not listed on Mason. Manually configure via lspconfig
 		local gdscript_config = {
 			capabilities = capabilities,
-			on_attach = on_attach,
 			settings = {},
 		}
 		require("lspconfig").gdscript.setup(gdscript_config)
