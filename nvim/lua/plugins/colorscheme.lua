@@ -1,5 +1,4 @@
 return {
-   { "sho-87/kanagawa-paper" },
    {
       "rebelot/kanagawa.nvim",
       lazy = false,

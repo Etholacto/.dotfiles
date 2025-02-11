@@ -4,20 +4,23 @@ return {
 		{ 'williamboman/mason.nvim', opts = {} },
 		'williamboman/mason-lspconfig.nvim',
 		'WhoIsSethDaniel/mason-tool-installer.nvim',
-		{ 'j-hui/fidget.nvim', opts = {} },
+		{
+			'j-hui/fidget.nvim',
+			event = "LspAttach",
+			opts = {}
+		},
 		'hrsh7th/cmp-nvim-lsp',
 	},
 	config = function()
-
 		require('mason').setup({
-            ui = {
-                icons = {
-                    package_installed = ' ',
-                    package_pending = ' ',
-                    package_uninstalled = ' ',
-                },
-            },
-        })
+			ui = {
+				icons = {
+					package_installed = ' ',
+					package_pending = ' ',
+					package_uninstalled = ' ',
+				},
+			},
+		})
 
 		vim.api.nvim_create_autocmd('LspAttach', {
 			group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),

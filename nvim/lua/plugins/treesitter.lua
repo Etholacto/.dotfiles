@@ -3,7 +3,7 @@ return {
   event = { "BufReadPost", "BufNewFile" },
   dependencies = {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    "windwp/nvim-ts-autotag", -- Automatically add closing tags for HTML and JSX
+	 "romgrk/nvim-treesitter-context",
   },
   build = ':TSUpdate',
   config = function(_, opts)

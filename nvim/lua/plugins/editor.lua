@@ -21,6 +21,20 @@ return {
 		event = 'VeryLazy',
 	},
 	{
+		"andymass/vim-matchup",
+		event = "BufRead",
+		enabled = false,
+		init = function()
+			vim.g.matchup_override_vimtex = 1
+			vim.g.matchup_matchparen_deferred = 1
+			vim.g.matchup_matchparen_offscreen = {}
+			-- method = "popup",
+			-- fullwidth = 0,
+			-- syntax_hl = 1,
+			-- }
+		end,
+	},
+	{
 		-- Automatic indentation of lines
 		"lukas-reineke/indent-blankline.nvim",
 		event = 'BufRead',
