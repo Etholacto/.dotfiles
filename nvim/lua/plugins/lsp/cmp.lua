@@ -53,22 +53,14 @@ return {
 				{ name = "buffer" }, -- text within current buffer
 				{ name = "path" }, -- file system paths
 			}),
-			-- -- configure lspkind for vs-code like pictograms in completion menu
-			-- formatting = {
-			-- 	format = lspkind.cmp_format({
-			-- 		mode = 'symbol', -- show only symbol annotations
-			-- 		maxwidth = {
-			-- 			menu = 50,    -- leading text (labelDetails)
-			-- 			abbr = 50,    -- actual suggestion item
-			-- 		},
-			-- 		ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-			-- 		show_labelDetails = true, -- show labelDetails in menu. Disabled by default
-			-- 		before = function(entry, vim_item)
-			-- 			-- ...
-			-- 			return vim_item
-			-- 		end
-			-- 	}),
-			-- }
+			-- configure lspkind for vs-code like pictograms in completion menu
+			formatting = {
+				format = lspkind.cmp_format({
+					mode = 'symbol', -- show only symbol annotations
+					ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+					show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+				}),
+			}
 		})
 		cmp.setup.filetype({ "sql" }, {
 			sources = {
