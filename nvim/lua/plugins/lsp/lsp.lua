@@ -93,6 +93,7 @@ return {
 					"clangd"
 				}
 			},
+			ltex = {},
 			lua_ls = {
 				settings = {
 					Lua = {
