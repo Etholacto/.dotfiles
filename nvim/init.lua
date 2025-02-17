@@ -28,7 +28,8 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 })
 
 -- This has to be set before initializing lazy
-vim.g.mapleader = " "
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 
 require("lazy").setup({
 	spec = {

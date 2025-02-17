@@ -30,16 +30,13 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
 				end
 
-				map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-				map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-				map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-				map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-				map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-				map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-				map("<leader>rn", vim.lsp.buf.rename, '[R]e[n]ame')
-				map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
-				map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-				map('<leader>cf', vim.lsp.buf.format, '[C]ode [F]ormat')
+
+				map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
+				map('gr', require('telescope.builtin').lsp_references, 'Goto References')
+				map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
+				map("<leader>cr", vim.lsp.buf.rename, 'Rename')
+				map('<leader>ca', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
+				map('<leader>cf', vim.lsp.buf.format, 'Code Format')
 				map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -53,7 +50,7 @@ return {
 		})
 
 		if vim.lsp.inlay_hint then
-			vim.keymap.set('n', '<Space>ih', function()
+			vim.keymap.set('n', '<leader>ch', function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 			end, { desc = 'Toggle Inlay Hints' })
 		end

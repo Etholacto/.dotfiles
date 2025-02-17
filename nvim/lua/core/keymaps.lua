@@ -5,34 +5,47 @@ local keymap = vim.keymap -- for conciseness
 -- save file
 keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>")
 
---move highlighted stuff up and down
-keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-keymap.set("n", "J", "mzJ`z")
+-- better indenting
+keymap.set("v", "<", "<gv")
+keymap.set("v", ">", ">gv")
+
+-- commenting
+keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
+keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
 --Yank to clipboard
-keymap.set({ "n", "v" }, "<leader>y", '"+y')
+keymap.set({ "n", "v" }, "<leader>y", '"+y', {desc = "Yank to Clipboard"})
 
---replace current word
-keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace current word" })
+-- better up/down
+keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+keymap.set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+keymap.set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
 -- window management
 keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
 keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>we", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
 keymap.set("n", "<leader>wc", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
--- Move to window using the <alt> hjkl keys
-keymap.set("n", "<A-h>", "<C-w>h", { desc = "Go to left window", remap = true })
-keymap.set("n", "<A-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
-keymap.set("n", "<A-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
-keymap.set("n", "<A-l>", "<C-w>l", { desc = "Go to right window", remap = true })
+-- Move to window using the <ctrl> hjkl keys
+keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
--- Tmux overrides
-keymap.set("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", { desc = "Tmux navigate window left" })
-keymap.set("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", { desc = "Tmux navigate window right" })
-keymap.set("n", "<C-j>", "<cmd> TmuxNavigateDown<CR>", { desc = "Tmux navigate window down" })
-keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", { desc = "Tmux navigate window up" })
+-- Resize window using <ctrl> arrow keys
+keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
+keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
+keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
+keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+
+-- Move Lines
+keymap.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
+keymap.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+keymap.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+keymap.set("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
+keymap.set("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
 -- buffers
 keymap.set("n", "<A-1>", "<Cmd>BufferLineGoToBuffer 1<CR>")
@@ -46,3 +59,19 @@ keymap.set("n", "<A-8>", "<Cmd>BufferLineGoToBuffer 8<CR>")
 keymap.set("n", "<A-9>", "<Cmd>BufferLineGoToBuffer 9<CR>")
 keymap.set("n", "<A-w>", "<Cmd>bdelete<CR>")
 keymap.set("n", "<A-q>", "<Cmd>q<CR>")
+
+-- diagnostic
+local diagnostic_goto = function(next, severity)
+  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go({ severity = severity })
+  end
+end
+keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+keymap.set("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+keymap.set("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+keymap.set("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
+keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
