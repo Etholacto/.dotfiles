@@ -31,10 +31,15 @@ return {
 				end
 
 
-				-- map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
-				-- map('gr', require('telescope.builtin').lsp_references, 'Goto References')
-				-- map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
+				map("gd", function() Snacks.picker.lsp_definitions() end, "Goto Definition")
+				map("gD", function() Snacks.picker.lsp_declarations() end, "Goto Declaration")
+				map("gr", function() Snacks.picker.lsp_references() end, "References")
+				map("gI", function() Snacks.picker.lsp_implementations() end, "Goto Implementation")
+				map("gy", function() Snacks.picker.lsp_type_definitions() end, "Goto T[y]pe Definition")
+				map("<leader>ss", function() Snacks.picker.lsp_symbols() end, "LSP Symbols")
+				map("<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, "LSP Workspace Symbols")
 				map("<leader>cr", vim.lsp.buf.rename, 'Rename')
+				map("<leader>cR", function() Snacks.rename.rename_file() end, "Rename File")
 				map('<leader>ca', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
 				map('<leader>cf', vim.lsp.buf.format, 'Code Format')
 				map('K', vim.lsp.buf.hover, 'Hover Documentation')

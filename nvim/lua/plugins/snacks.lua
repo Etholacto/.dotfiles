@@ -16,14 +16,27 @@ return {
 				},
 				{
 					pane = 2,
-					{ section = "keys",   gap = 1, padding = 1 },
+					{
+						{ icon = " ", key = "f", desc = "File Browser", action = ":lua Snacks.picker.explorer()" },
+						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+						{ icon = " ", key = "s", desc = "Restore Session", section = "session" },
+						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+						{ icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+						gap = 1,
+						padding = 1
+					},
 					{ section = "startup" },
 				},
 			}
 		},
-		explorer = { enabled = true },
+		debug = { engabled = false },
+		explorer = { enabled = false },
 		indent = { enabled = true },
 		input = { enabled = true },
+		image = { enabled = true },
 		notifier = {
 			enabled = true,
 			timeout = 3000,
@@ -38,13 +51,36 @@ return {
 						height = 0.9,
 						{
 							box = "vertical",
-							{ win = "input", height = 1,        border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
-							{ win = "list",  border = "rounded", title = "Results", title_pos = "center" },
+							{ win = "input", height = 1,         border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
+							{ win = "list",  border = "rounded", title = "Results",  title_pos = "center" },
 						},
 						{ win = "preview", title = "{preview}", border = "rounded", width = 0.5 },
 					}
 				},
 			},
+			sources = {
+				explorer = {
+					auto_close = true,
+					diagnostics = false,
+					git_status = false,
+					layout = {
+						layout = {
+							position = 'float',
+							box = "horizontal",
+							backdrop = false,
+							width = 0.8,
+							height = 0.9,
+							{
+								box = "vertical",
+								{ win = "input", height = 1,         border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
+								{ win = "list",  border = "rounded", title = "Results",  title_pos = "center" },
+							},
+							{ win = "preview", title = "{preview}", border = "rounded", width = 0.5 },
+						},
+						preview = true
+					}
+				}
+			}
 		},
 		quickfile = { enabled = true },
 		scope = { enabled = true },
@@ -61,7 +97,7 @@ return {
 		--general
 		{ "<leader>n",  function() Snacks.picker.notifications() end,                           desc = "Notification History" },
 		-- find
-		-- { "<leader>fb", function() Snacks.picker.explorer() end,                                desc = "Explor Files" },
+		{ "<leader>fb", function() Snacks.picker.explorer() end,                                desc = "Explor Files" },
 		{ "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
 		{ "<leader>ff", function() Snacks.picker.files() end,                                   desc = "Find Files" },
 		{ "<leader>fg", function() Snacks.picker.grep() end,                                    desc = "Grep" },
@@ -81,7 +117,6 @@ return {
 		{ "<leader>sw", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
 		-- search
 		{ '<leader>s"', function() Snacks.picker.registers() end,                               desc = "Registers" },
-		{ '<leader>s/', function() Snacks.picker.search_history() end,                          desc = "Search History" },
 		{ "<leader>sd", function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
 		{ "<leader>sD", function() Snacks.picker.diagnostics_buffer() end,                      desc = "Buffer Diagnostics" },
 		{ "<leader>sh", function() Snacks.picker.help() end,                                    desc = "Help Pages" },
@@ -89,23 +124,12 @@ return {
 		{ "<leader>sm", function() Snacks.picker.man() end,                                     desc = "Man Pages" },
 		{ "<leader>su", function() Snacks.picker.undo() end,                                    desc = "Undo History" },
 		{ "<leader>uC", function() Snacks.picker.colorschemes() end,                            desc = "Colorschemes" },
-		-- LSP
-		{ "gd",         function() Snacks.picker.lsp_definitions() end,                         desc = "Goto Definition" },
-		{ "gD",         function() Snacks.picker.lsp_declarations() end,                        desc = "Goto Declaration" },
-		{ "gr",         function() Snacks.picker.lsp_references() end,                          nowait = true,                     desc = "References" },
-		{ "gI",         function() Snacks.picker.lsp_implementations() end,                     desc = "Goto Implementation" },
-		{ "gy",         function() Snacks.picker.lsp_type_definitions() end,                    desc = "Goto T[y]pe Definition" },
-		{ "<leader>ss", function() Snacks.picker.lsp_symbols() end,                             desc = "LSP Symbols" },
-		{ "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end,                   desc = "LSP Workspace Symbols" },
-
 		-- Other
-		{ "<leader>cR", function() Snacks.rename.rename_file() end,                             desc = "Rename File" },
 		{ "<leader>gB", function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
 		{ "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
 		{ "<leader>un", function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
+		{ "<c-_>",      function() Snacks.terminal() end,                                       desc = "which_key_ignore" },
 		{ "<c-/>",      function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
-		{ "]]",         function() Snacks.words.jump(vim.v.count1) end,                         desc = "Next Reference",           mode = { "n", "t" } },
-		{ "[[",         function() Snacks.words.jump(-vim.v.count1) end,                        desc = "Prev Reference",           mode = { "n", "t" } },
 	},
 	init = function()
 		vim.api.nvim_create_autocmd("User", {
