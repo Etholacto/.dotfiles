@@ -94,17 +94,19 @@ return {
 		}
 	},
 	keys = {
-		--general
+		-- General
 		{ "<leader>n",  function() Snacks.picker.notifications() end,                           desc = "Notification History" },
-		-- find
+		{ "<leader>tn", function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
+		-- Find
 		{ "<leader>fb", function() Snacks.picker.explorer() end,                                desc = "Explor Files" },
 		{ "<leader>fc", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
 		{ "<leader>ff", function() Snacks.picker.files() end,                                   desc = "Find Files" },
 		{ "<leader>fg", function() Snacks.picker.grep() end,                                    desc = "Grep" },
 		{ "<leader>fp", function() Snacks.picker.projects() end,                                desc = "Projects" },
 		{ "<leader>fr", function() Snacks.picker.recent() end,                                  desc = "Recent" },
-		-- git
+		-- Git
 		{ "<leader>gb", function() Snacks.picker.git_branches() end,                            desc = "Git Branches" },
+		{ "<leader>gB", function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
 		{ "<leader>gl", function() Snacks.picker.git_log() end,                                 desc = "Git Log" },
 		{ "<leader>gL", function() Snacks.picker.git_log_line() end,                            desc = "Git Log Line" },
 		{ "<leader>gs", function() Snacks.picker.git_status() end,                              desc = "Git Status" },
@@ -115,7 +117,7 @@ return {
 		{ "<leader>sb", function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
 		{ "<leader>sB", function() Snacks.picker.grep_buffers() end,                            desc = "Grep Open Buffers" },
 		{ "<leader>sw", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
-		-- search
+		-- Search
 		{ '<leader>s"', function() Snacks.picker.registers() end,                               desc = "Registers" },
 		{ "<leader>sd", function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
 		{ "<leader>sD", function() Snacks.picker.diagnostics_buffer() end,                      desc = "Buffer Diagnostics" },
@@ -123,10 +125,8 @@ return {
 		{ "<leader>si", function() Snacks.picker.icons() end,                                   desc = "Icons" },
 		{ "<leader>sm", function() Snacks.picker.man() end,                                     desc = "Man Pages" },
 		{ "<leader>su", function() Snacks.picker.undo() end,                                    desc = "Undo History" },
-		{ "<leader>uC", function() Snacks.picker.colorschemes() end,                            desc = "Colorschemes" },
+		{ "<leader>tc", function() Snacks.picker.colorschemes() end,                            desc = "Colorschemes" },
 		-- Other
-		{ "<leader>gB", function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
-		{ "<leader>un", function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
 		{ "<c-_>",      function() Snacks.terminal() end,                                       desc = "which_key_ignore" },
 		{ "<c-/>",      function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
 	},

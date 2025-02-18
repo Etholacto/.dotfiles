@@ -11,8 +11,8 @@ return { -- Useful plugin to show you pending keybinds.
 				{ "<leader>f", group = "File/Find" },
 				{ "<leader>g", group = "Git" },
 				{ "<leader>q", group = "Session" },
-				{ "<leader>s", group = "search" },
-				{ "<leader>u", group = "UI", icon = { icon = "󰙵 ", color = "cyan" } },
+				{ "<leader>s", group = "Search" },
+				{ "<leader>t", group = "Toggle", icon = { icon = "󰙵 ", color = "cyan" } },
 				{ "<leader>x", group = "Diagnostics/Quickfix", icon = { icon = "󱖫 ", color = "green" } },
 				{ "[", group = "prev" },
 				{ "]", group = "next" },
@@ -27,8 +27,6 @@ return { -- Useful plugin to show you pending keybinds.
 						return require("which-key.extras").expand.win()
 					end,
 				},
-				-- better descriptions
-				{ "gx", desc = "Open with system app" },
 			},
 		}
 	}
