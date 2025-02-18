@@ -12,7 +12,7 @@ return { -- Useful plugin to show you pending keybinds.
 				{ "<leader>g", group = "Git" },
 				{ "<leader>q", group = "Session" },
 				{ "<leader>s", group = "search" },
-				{ "<leader>t", group = "Toggle", icon = { icon = "󰙵 ", color = "cyan" } },
+				{ "<leader>u", group = "UI", icon = { icon = "󰙵 ", color = "cyan" } },
 				{ "<leader>x", group = "Diagnostics/Quickfix", icon = { icon = "󱖫 ", color = "green" } },
 				{ "[", group = "prev" },
 				{ "]", group = "next" },

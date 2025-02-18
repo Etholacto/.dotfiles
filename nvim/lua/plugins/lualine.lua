@@ -143,7 +143,7 @@ return {
 		ins_left { 
 			'diff',
 			-- Is it me or the symbol for modified us really weird
-			symbols = { added = '+', modified = '~', removed = '_' },
+			symbols = { added = '+', modified = '~', removed = '-' },
 			diff_color = {
 				added = { fg = colors.green },
 				modified = { fg = colors.orange },

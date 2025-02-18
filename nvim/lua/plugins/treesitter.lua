@@ -21,7 +21,6 @@ return {
 				'java',
 				'lua',
 				'markdown',
-				'markdown-inline',
 				'python',
 				'sql',
 				'vim',

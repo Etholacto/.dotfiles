@@ -16,7 +16,6 @@ return {
    init = function()
       --Your DBUI configuration
       vim.g.db_ui_use_nerd_fonts = true
-      vim.g.db_ui_use_nvim_notify = true
       vim.g.db_ui_show_database_icon = true
    end,
 }

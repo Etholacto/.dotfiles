@@ -31,9 +31,9 @@ return {
 				end
 
 
-				map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
-				map('gr', require('telescope.builtin').lsp_references, 'Goto References')
-				map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
+				-- map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
+				-- map('gr', require('telescope.builtin').lsp_references, 'Goto References')
+				-- map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
 				map("<leader>cr", vim.lsp.buf.rename, 'Rename')
 				map('<leader>ca', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
 				map('<leader>cf', vim.lsp.buf.format, 'Code Format')
@@ -96,7 +96,7 @@ return {
 					Lua = {
 						workspace = { checkThirdParty = false },
 						telemetry = { enable = false },
-						diagnostics = { globals = { "vim" } },
+						diagnostics = { globals = { "vim", "Snacks" } },
 					}
 				}
 			},

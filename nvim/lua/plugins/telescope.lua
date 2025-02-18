@@ -3,10 +3,6 @@ return {
 	branch = "0.1.x",
 	dependencies = {
 		"nvim-telescope/telescope-file-browser.nvim",
-		{
-			"nvim-telescope/telescope-fzf-native.nvim",
-			build = 'make',
-		},
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
 	},
@@ -71,14 +67,9 @@ return {
 		})
 
 		telescope.load_extension('file_browser')
-		telescope.load_extension('fzf')
 
 		-- set keymaps
 		local keymap = vim.keymap -- for conciseness
-
-		keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files" })
-		keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Find recent files" })
-		keymap.set('n', '<leader>fg', "<cmd>Telescope live_grep<cr>", { desc = "Live grep in file" })
 		keymap.set(
 			"n",
 			"<leader>fb",

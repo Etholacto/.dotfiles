@@ -22,12 +22,6 @@ return {
 				},
 				offsets = {
 					{
-						filetype = "undotree",
-						text = "Undo Tree",
-						highlight = "Directory",
-						text_align = "left",
-					},
-					{
 						filetype = "dbui",
 						text = "DB UI",
 						highlight = "Directory",
