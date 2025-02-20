@@ -102,7 +102,7 @@ return {
 					['!'] = "Shell",
 					t = "Terminal",
 				}
-				return '' .. " " .. modes[vim.fn.mode()]
+				return ' ' .. modes[vim.fn.mode()]
 			end,
 			color = function()
 				-- auto change color according to neovims mode
@@ -130,12 +130,12 @@ return {
 				}
 				return { fg = mode_color[vim.fn.mode()] }
 			end,
-			padding = { left = 1, right = 1 },
+			padding = { left = 1, right = 1.75 },
 		}
 
 		ins_left {
 			'branch',
-			icon = '',
+			icon = '',
 			color = { fg = colors.blue },
 		}
 
