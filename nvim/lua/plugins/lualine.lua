@@ -6,17 +6,16 @@ return {
 		-- Color table for highlights
 		-- stylua: ignore
 		local colors = {
-			bg       = '#1F1F28',
-			fg       = '#DCD7BA',
-			yellow   = '#FF9E3B',
-			cyan     = '#6A9589',
-			darkblue = '#081633',
-			green    = '#76946A',
-			orange   = '#DCA561',
-			violet   = '#957FB8',
-			magenta  = '#c678dd',
-			blue     = '#51afef',
-			red      = '#C34043',
+			bg      = '#1F1F28',
+			fg      = '#DCD7BA',
+			add     = '#76946A',
+			change  = '#FF9E3B',
+			delete  = '#C34043',
+			warning = '#DCA561',
+			error   = '#E82424',
+			hint    = '#658594',
+			magenta = '#957FB8',
+			blue    = '#7E9CD8',
 		}
 
 		local conditions = {
@@ -108,46 +107,46 @@ return {
 			color = function()
 				-- auto change color according to neovims mode
 				local mode_color = {
-					n = colors.red,
-					i = colors.green,
+					n = colors.delete,
+					i = colors.add,
 					v = colors.blue,
 					[''] = colors.blue,
 					V = colors.blue,
 					c = colors.magenta,
-					no = colors.red,
-					s = colors.orange,
-					S = colors.orange,
-					[''] = colors.orange,
-					ic = colors.yellow,
-					R = colors.violet,
-					Rv = colors.violet,
-					cv = colors.red,
-					ce = colors.red,
-					r = colors.cyan,
-					rm = colors.cyan,
-					['r?'] = colors.cyan,
-					['!'] = colors.red,
-					t = colors.red,
+					no = colors.delete,
+					s = colors.warning,
+					S = colors.warning,
+					[''] = colors.warning,
+					ic = colors.change,
+					R = colors.error,
+					Rv = colors.error,
+					cv = colors.delete,
+					ce = colors.delete,
+					r = colors.hint,
+					rm = colors.hint,
+					['r?'] = colors.hint,
+					['!'] = colors.delete,
+					t = colors.delete,
 				}
 				return { fg = mode_color[vim.fn.mode()] }
 			end,
-			padding = { right = 1 },
+			padding = { left = 1, right = 1 },
 		}
 
 		ins_left {
 			'branch',
 			icon = '',
-			color = { fg = colors.violet, gui = 'bold' },
+			color = { fg = colors.blue },
 		}
 
-		ins_left { 
+		ins_left {
 			'diff',
 			-- Is it me or the symbol for modified us really weird
 			symbols = { added = '+', modified = '~', removed = '-' },
 			diff_color = {
-				added = { fg = colors.green },
-				modified = { fg = colors.orange },
-				removed = { fg = colors.red },
+				added = { fg = colors.add },
+				modified = { fg = colors.change },
+				removed = { fg = colors.delete },
 			},
 			cond = conditions.hide_in_width,
 
@@ -187,16 +186,16 @@ return {
 			sources = { 'nvim_diagnostic' },
 			symbols = { error = ' ', warn = ' ', info = ' ' },
 			diagnostics_color = {
-				error = { fg = colors.red },
-				warn = { fg = colors.yellow },
-				info = { fg = colors.cyan },
+				error = { fg = colors.error },
+				warn = { fg = colors.warning },
+				info = { fg = colors.info },
 			},
 		}
 
 		ins_right {
 			'filename',
 			cond = conditions.buffer_not_empty,
-			color = { fg = colors.magenta, gui = 'bold' },
+			color = { fg = colors.magenta },
 		}
 
 		ins_right { 'location' }

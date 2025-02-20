@@ -14,7 +14,7 @@ return{
    color_scheme = 'Kanagawa (Gogh)',
    enable_tab_bar = false,
    font_size = 11.0,
-   window_background_opacity = 1.0,
+   window_background_opacity = 1,
    window_decorations = 'RESIZE',
 }
 
