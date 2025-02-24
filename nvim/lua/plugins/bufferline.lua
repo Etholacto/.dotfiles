@@ -1,5 +1,6 @@
 return {
 	"akinsho/bufferline.nvim",
+	event = { "BufReadPre", "BufNewFile" },
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	version = "*",
 	config = function()
@@ -26,37 +27,37 @@ return {
 						text = "DB UI",
 						highlight = "Directory",
 						text_align = "left",
-					}
+					},
 				},
 			},
 			highlights = {
 				fill = {
-					bg = "#1f1f28"
+					bg = "#1f1f28",
 				},
 				indicator_selected = {
 					fg = "#717c7c",
 					bg = "#363646",
 				},
 				modified = {
-					fg = "#76946A"
+					fg = "#76946A",
 				},
 				modified_selected = {
 					fg = "#98BB6C",
-					bg = "#1f1f28"
+					bg = "#1f1f28",
 				},
 				separator_selected = {
 					fg = "#1f1f28",
 				},
 				separator_visible = {
-					fg = "#1F1F28"
+					fg = "#1F1F28",
 				},
 				separator = {
-					fg = "#1f1f28"
+					fg = "#1f1f28",
 				},
 				trunc_marker = {
-					bg = "#1f1f28"
-				}
-			}
+					bg = "#1f1f28",
+				},
+			},
 		})
-	end
+	end,
 }

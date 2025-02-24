@@ -1,5 +1,23 @@
 return {
 	{
+		-- More functionality for connection between nvim and godot
+		"habamax/vim-godot",
+		ft = "gdscript",
+		event = "BufReadPre",
+	},
+	{
+		-- Changes background to match colour (Hex, names var, etc.)
+		"NvChad/nvim-colorizer.lua",
+		event = { "BufReadPre", "BufNewFile" },
+		config = true,
+	},
+	{
+		-- Highlights todo sections
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
+	},
+	{
 		"folke/persistence.nvim",
 		event = "BufReadPre",
 		opts = { options = vim.opt.sessionoptions:get() },
@@ -12,7 +30,7 @@ return {
 	},
 	{
 		"utilyre/barbecue.nvim",
-		name = "barbecue",
+		event = { "BufReadPre", "BufNewFile" },
 		version = "*",
 		dependencies = {
 			"SmiteshP/nvim-navic",

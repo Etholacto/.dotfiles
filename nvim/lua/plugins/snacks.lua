@@ -98,7 +98,7 @@ return {
 		{ "<leader>n",  function() Snacks.picker.notifications() end,      desc = "Notification History" },
 		{ "<leader>tn", function() Snacks.notifier.hide() end,             desc = "Dismiss All Notifications" },
 		-- Find
-		{ "<leader>fb", function() Snacks.picker.explorer() end,           desc = "Explor Files" },
+		{ "<leader>fb", function() Snacks.picker.explorer() end,           desc = "Explore Files" },
 		{ "<leader>fc", function() Snacks.lazygit() end,                   desc = "Lazygit" },
 		{ "<leader>ff", function() Snacks.picker.files() end,              desc = "Find Files" },
 		{ "<leader>fg", function() Snacks.picker.grep() end,               desc = "Grep" },
@@ -124,20 +124,10 @@ return {
 		{ "<leader>sh", function() Snacks.picker.help() end,               desc = "Help Pages" },
 		{ "<leader>si", function() Snacks.picker.icons() end,              desc = "Icons" },
 		{ "<leader>sm", function() Snacks.picker.man() end,                desc = "Man Pages" },
-		{ "<leader>su", function() Snacks.picker.undo() end,               desc = "Undo History" },
+		{ "<leader>tu", function() Snacks.picker.undo() end,               desc = "Undo History" },
 		{ "<leader>tc", function() Snacks.picker.colorschemes() end,       desc = "Colorschemes" },
 		-- Other
 		{ "<c-_>",      function() Snacks.terminal() end,                  desc = "which_key_ignore" },
 		{ "<c-/>",      function() Snacks.terminal() end,                  desc = "Toggle Terminal" },
 	},
-	init = function()
-		vim.api.nvim_create_autocmd("User", {
-			pattern = "VeryLazy",
-			callback = function()
-				if vim.lsp.inlay_hints then
-					Snacks.toggle.inlay_hints():map("<leader>ch")
-				end
-			end
-		})
-	end
 }

@@ -6,9 +6,8 @@ return {
 		"romgrk/nvim-treesitter-context",
 	},
 	build = ':TSUpdate',
-	config = function(_, opts)
-		local configs = require("nvim-treesitter.configs")
-		configs.setup({
+	config = function()
+		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				'c',
 				'c_sharp',
@@ -35,6 +34,19 @@ return {
 				enable_rename = true,
 				enable_close = true,
 				enable_close_on_slash = true,
+			},
+			textobjects = {
+				select = {
+					enable = true,
+					keymaps = {
+						-- Your custom capture.
+						["aF"] = "@custom_capture",
+
+						-- Built-in captures.
+						["af"] = "@function.outer",
+						["if"] = "@function.inner",
+					},
+				},
 			},
 		})
 	end
