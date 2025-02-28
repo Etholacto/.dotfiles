@@ -145,6 +145,7 @@ return {
 			"stylua", --Formater Lua
 			"isort", --Formater Python
 			"black", --Formater Python
+			"clang-format", --Formater C,C++
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 

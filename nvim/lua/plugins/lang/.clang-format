@@ -1,0 +1,18 @@
+---
+IndentWidth: 4
+ColumnLimit: 100
+BinPackParameters: false  # Ensures parameters are aligned in a column if wrapped
+BinPackArguments: false  # Ensures parameters are aligned in a column if wrapped
+BreakBeforeBraces: Attach  # Braces on a new line
+PointerAlignment: Right  # Places * and & next to the variable, not the type
+AllowAllParametersOfDeclarationOnNextLine: false  # Forces each parameter onto a new line when wrapped
+AlignConsecutiveAssignments: Consecutive  # Aligns assignment operators for readability
+AlignConsecutiveDeclarations: None  # Aligns variable declarations in a column
+AlignAfterOpenBracket: Align  # Aligns parameters and arguments properly
+BreakAfterReturnType: Automatic  # Breaks return type onto a new line for functions
+AllowShortFunctionsOnASingleLine: All  # No single-line function definitions
+BreakConstructorInitializers: AfterColon  # Ensures constructors are formatted neatly
+BreakBeforeTernaryOperators: true  # Places ternary `? :` operators on new lines
+SortIncludes: true  # Automatically sorts #include statements
+...
+

@@ -1,6 +1,6 @@
 return { -- Useful plugin to show you pending keybinds.
-	'folke/which-key.nvim',
-	event = 'VimEnter',
+	"folke/which-key.nvim",
+	event = "VeryLazy",
 	opts = {
 		preset = "helix",
 		spec = {
@@ -28,6 +28,6 @@ return { -- Useful plugin to show you pending keybinds.
 					end,
 				},
 			},
-		}
-	}
+		},
+	},
 }
