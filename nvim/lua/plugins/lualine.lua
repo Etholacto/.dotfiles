@@ -20,14 +20,14 @@ return {
 
 		local conditions = {
 			buffer_not_empty = function()
-				return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+				return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
 			end,
 			hide_in_width = function()
 				return vim.fn.winwidth(0) > 80
 			end,
 			check_git_workspace = function()
-				local filepath = vim.fn.expand('%:p:h')
-				local gitdir = vim.fn.finddir('.git', filepath .. ';')
+				local filepath = vim.fn.expand("%:p:h")
+				local gitdir = vim.fn.finddir(".git", filepath .. ";")
 				return gitdir and #gitdir > 0 and #gitdir < #filepath
 			end,
 		}
@@ -36,8 +36,8 @@ return {
 		local config = {
 			options = {
 				-- Disable sections and component separators
-				component_separators = '',
-				section_separators = '',
+				component_separators = "",
+				section_separators = "",
 				theme = {
 					-- We are going to use lualine_c an lualine_x as left and
 					-- right section. Both are highlighted by c theme .  So we
@@ -77,20 +77,20 @@ return {
 			table.insert(config.sections.lualine_x, component)
 		end
 
-		ins_left {
+		ins_left({
 			-- mode component
 			function()
 				local modes = {
 					n = "Normal",
 					i = "Insert",
 					v = "Visual",
-					[''] = "VisualBlock",
+					[""] = "VisualBlock",
 					V = "VisualLine",
 					c = "Command",
 					no = "OperatorPending",
 					s = "Select",
 					S = "SelectLine",
-					[''] = "SelectBlock",
+					[""] = "SelectBlock",
 					ic = "InsertCompletion",
 					R = "Replace",
 					Rv = "VirtualReplace",
@@ -98,11 +98,11 @@ return {
 					ce = "Ex",
 					r = "Prompt",
 					rm = "More",
-					['r?'] = "Confirm",
-					['!'] = "Shell",
+					["r?"] = "Confirm",
+					["!"] = "Shell",
 					t = "Terminal",
 				}
-				return ' ' .. modes[vim.fn.mode()]
+				return " " .. modes[vim.fn.mode()]
 			end,
 			color = function()
 				-- auto change color according to neovims mode
@@ -110,13 +110,13 @@ return {
 					n = colors.delete,
 					i = colors.add,
 					v = colors.blue,
-					[''] = colors.blue,
+					[""] = colors.blue,
 					V = colors.blue,
 					c = colors.magenta,
 					no = colors.delete,
 					s = colors.warning,
 					S = colors.warning,
-					[''] = colors.warning,
+					[""] = colors.warning,
 					ic = colors.change,
 					R = colors.error,
 					Rv = colors.error,
@@ -124,47 +124,49 @@ return {
 					ce = colors.delete,
 					r = colors.hint,
 					rm = colors.hint,
-					['r?'] = colors.hint,
-					['!'] = colors.delete,
+					["r?"] = colors.hint,
+					["!"] = colors.delete,
 					t = colors.delete,
 				}
 				return { fg = mode_color[vim.fn.mode()] }
 			end,
 			padding = { left = 1, right = 1.75 },
-		}
+		})
 
-		ins_left {
-			'branch',
-			icon = '',
+		ins_left({
+			"branch",
+			icon = "",
 			color = { fg = colors.blue },
-		}
+		})
 
-		ins_left {
-			'diff',
+		ins_left({
+			"diff",
 			-- Is it me or the symbol for modified us really weird
-			symbols = { added = '+', modified = '~', removed = '-' },
+			symbols = { added = "+", modified = "~", removed = "-" },
 			diff_color = {
 				added = { fg = colors.add },
 				modified = { fg = colors.change },
 				removed = { fg = colors.delete },
 			},
 			cond = conditions.hide_in_width,
+		})
 
-		}
+		ins_right({
+			"diagnostics",
+			sources = { "nvim_diagnostic" },
+			symbols = { error = " ", warn = " ", info = " " },
+			diagnostics_color = {
+				error = { fg = colors.error },
+				warn = { fg = colors.warning },
+				info = { fg = colors.info },
+			},
+		})
 
-		-- Insert mid section. You can make any number of sections in neovim :)
-		-- for lualine it's any number greater then 2
-		ins_left {
-			function()
-				return '%='
-			end,
-		}
-
-		ins_left {
+		ins_right({
 			-- Lsp server name .
 			function()
-				local msg = 'No Active Lsp'
-				local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
+				local msg = "No Active Lsp"
+				local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
 				local clients = vim.lsp.get_clients()
 				if next(clients) == nil then
 					return msg
@@ -177,28 +179,11 @@ return {
 				end
 				return msg
 			end,
-			icon = ' LSP:',
-			color = { fg = colors.fg },
-		}
-
-		ins_right {
-			'diagnostics',
-			sources = { 'nvim_diagnostic' },
-			symbols = { error = ' ', warn = ' ', info = ' ' },
-			diagnostics_color = {
-				error = { fg = colors.error },
-				warn = { fg = colors.warning },
-				info = { fg = colors.info },
-			},
-		}
-
-		ins_right {
-			'filename',
-			cond = conditions.buffer_not_empty,
+			icon = " :",
 			color = { fg = colors.magenta },
-		}
+		})
 
-		ins_right { 'location' }
+		ins_right({ "location" })
 
 		-- Now don't forget to initialize lualine
 		lualine.setup(config)

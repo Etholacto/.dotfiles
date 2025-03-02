@@ -14,7 +14,7 @@ keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add
 keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
 --Yank to clipboard
-keymap.set({ "n", "v" }, "<leader>y", '"+y', {desc = "Yank to Clipboard"})
+keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to Clipboard" })
 
 -- better up/down
 keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -61,17 +61,4 @@ keymap.set("n", "<A-w>", "<Cmd>bdelete<CR>")
 keymap.set("n", "<A-q>", "<Cmd>q<CR>")
 
 -- diagnostic
-local diagnostic_goto = function(next, severity)
-  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    go({ severity = severity })
-  end
-end
 keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-keymap.set("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
-keymap.set("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
-keymap.set("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
-keymap.set("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
-keymap.set("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
-keymap.set("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
