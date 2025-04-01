@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 return {
 	"nvim-treesitter/nvim-treesitter",
 	event = { "BufReadPost", "BufNewFile" },
@@ -5,25 +6,27 @@ return {
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		"romgrk/nvim-treesitter-context",
 	},
-	build = ':TSUpdate',
+	build = ":TSUpdate",
 	config = function()
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
-				'c',
-				'c_sharp',
-				'cpp',
-				'comment',
-				'gdscript',
-				'gdshader',
-				'godot_resource',
-				'glsl',
-				'java',
-				'lua',
-				'markdown',
-				'python',
-				'sql',
-				'vim',
-				'vimdoc',
+				"c",
+				"c_sharp",
+				"cpp",
+				"comment",
+				"gdscript",
+				"gdshader",
+				"godot_resource",
+				"glsl",
+				"java",
+				"lua",
+				"markdown",
+				"python",
+				"sql",
+				"vim",
+				"vimdoc",
+				"html",
+				"css",
 			},
 			sync_install = true,
 			highlight = { enable = true },
@@ -49,5 +52,5 @@ return {
 				},
 			},
 		})
-	end
+	end,
 }

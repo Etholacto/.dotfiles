@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
@@ -119,7 +120,9 @@ return {
 					"clangd",
 				},
 			},
-			ltex = {},
+			ltex = {
+				filetypes = { "latex", "tex", "bib" },
+			},
 			lua_ls = {
 				settings = {
 					Lua = {
@@ -129,6 +132,7 @@ return {
 					},
 				},
 			},
+			marksman = {},
 			jdtls = {
 				autostart = false,
 			},
@@ -137,7 +141,8 @@ return {
 			omnisharp = {},
 			pylsp = {},
 			sqlls = {},
-			texlab = {},
+			html = {},
+			cssls = {},
 		}
 
 		local ensure_installed = vim.tbl_keys(servers or {})
@@ -152,9 +157,11 @@ return {
 		require("mason-lspconfig").setup({
 			handlers = {
 				function(server_name)
-					local server = servers[server_name] or {}
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
+					if server_name ~= "jdtls" then
+						local server = servers[server_name] or {}
+						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+						require("lspconfig")[server_name].setup(server)
+					end
 				end,
 			},
 		})

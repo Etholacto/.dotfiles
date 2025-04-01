@@ -7,7 +7,7 @@ return {
 		local lombok_jar = mason_registry.get_package("jdtls"):get_install_path() .. "/lombok.jar"
 		table.insert(cmd, string.format("--jvm-arg=-javaagent:%s", lombok_jar))
 		return {
-			root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
+			root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw", "pom.xml" }, { upward = true })[1]),
 
 			project_name = function(root_dir)
 				return root_dir and vim.fs.basename(root_dir)
@@ -71,15 +71,18 @@ return {
 			end
 		end
 		local function attach_jdtls()
-			local config = ({
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
+
+			local config = {
 				cmd = opts.full_cmd(opts),
 				root_dir = opts.root_dir,
 				init_options = {
 					bundles = bundles,
 				},
 				settings = opts.settings,
-				capabilities = require("cmp_nvim_lsp").default_capabilities() or nil,
-			})
+				capabilities = capabilities,
+			}
 			require("jdtls").start_or_attach(config)
 		end
 
