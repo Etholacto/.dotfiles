@@ -40,31 +40,33 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
+				vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
 				map("gd", function()
-					Snacks.picker.lsp_definitions()
+					vim.lsp.buf.definition()
 				end, "Goto Definition")
 				map("gD", function()
-					Snacks.picker.lsp_declarations()
+					vim.lsp.buf.declarations()
 				end, "Goto Declaration")
 				map("gr", function()
-					Snacks.picker.lsp_references()
+					vim.lsp.buf.references()
 				end, "References")
 				map("gI", function()
-					Snacks.picker.lsp_implementations()
+					vim.lsp.buf.implementations()
 				end, "Goto Implementation")
 				map("gy", function()
-					Snacks.picker.lsp_type_definitions()
-				end, "Goto T[y]pe Definition")
+					vim.lsp.buf.type_definitions()
+				end, "Goto Type Definition")
 				map("<leader>ss", function()
-					Snacks.picker.lsp_symbols()
+					vim.lsp.buf.document_symbol()
 				end, "LSP Symbols")
 				map("<leader>sS", function()
-					Snacks.picker.lsp_workspace_symbols()
+					vim.lsp.buf.workspace_symbol()
 				end, "LSP Workspace Symbols")
 				map("<leader>cr", vim.lsp.buf.rename, "Rename")
-				map("<leader>cR", function()
-					Snacks.rename.rename_file()
-				end, "Rename File")
+				-- map("<leader>cR", function()
+				-- 	Snacks.rename.rename_file()
+				-- end, "Rename File")
 				map("<leader>ca", vim.lsp.buf.code_action, "Code Action", { "n", "x" })
 				map("<leader>cf", vim.lsp.buf.format, "Code Format")
 				map("K", vim.lsp.buf.hover, "Hover Documentation")
@@ -128,7 +130,7 @@ return {
 					Lua = {
 						workspace = { checkThirdParty = false },
 						telemetry = { enable = false },
-						diagnostics = { globals = { "vim", "Snacks" } },
+						diagnostics = { globals = { "vim" } },
 					},
 				},
 			},
@@ -160,7 +162,7 @@ return {
 					if server_name ~= "jdtls" then
 						local server = servers[server_name] or {}
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
+						vim.lsp.config(server_name, server)
 					end
 				end,
 			},
@@ -171,6 +173,6 @@ return {
 			capabilities = capabilities,
 			settings = {},
 		}
-		require("lspconfig").gdscript.setup(gdscript_config)
+		vim.lsp.config("gdscript", gdscript_config)
 	end,
 }
