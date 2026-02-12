@@ -117,7 +117,6 @@ return {
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
 		local servers = {
-			bashls = {},
 			clangd = {
 				cmd = {
 					"clangd",
@@ -143,9 +142,6 @@ return {
 			glsl_analyzer = {},
 			omnisharp = {},
 			pylsp = {},
-			sqlls = {},
-			html = {},
-			cssls = {},
 		}
 
 		local ensure_installed = vim.tbl_keys(servers or {})
