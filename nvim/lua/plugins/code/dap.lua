@@ -81,11 +81,20 @@ return {
 		-- end
 
 		local function get_python_path()
-			local cwd = vim.fn.getcwd()
 			local is_win = vim.fn.has("win32") == 1
 
-			local candidates
+			--Conda Envs
+			local conda_prefix = vim.env.CONDA_PREFIX
+			if conda_prefix and conda_prefix ~= "" then
+				local conda_python = is_win and (conda_prefix .. "\\python.exe") or (conda_prefix .. "/bin/python")
+				if vim.fn.executable(conda_python) == 1 then
+					return conda_python
+				end
+			end
 
+			--Local Envs
+			local cwd = vim.fn.getcwd()
+			local candidates
 			if is_win then
 				candidates = {
 					cwd .. "\\env\\Scripts\\python.exe",
