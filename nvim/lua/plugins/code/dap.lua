@@ -65,7 +65,46 @@ return {
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Set Breakpoint" })
 
-		dapui.setup()
+		dapui.setup({
+			layouts = {
+				{
+					elements = {
+						{
+							id = "scopes",
+							size = 0.7,
+						},
+						{
+							id = "watches",
+							size = 0.05,
+						},
+						{
+							id = "stacks",
+							size = 0.05,
+						},
+						{
+							id = "breakpoints",
+							size = 0.1,
+						},
+					},
+					position = "left",
+					size = 40,
+				},
+				{
+					elements = {
+						{
+							id = "repl",
+							size = 0.75,
+						},
+						{
+							id = "console",
+							size = 0.25,
+						},
+					},
+					position = "bottom",
+					size = 15,
+				},
+			},
+		})
 
 		dap.listeners.before.attach.dapui_config = function()
 			dapui.open()
@@ -119,30 +158,33 @@ return {
 			return vim.fn.exepath("python")
 		end
 
+		local data = vim.fn.stdpath("data")
+		local mason = data .. "/mason/packages/debugpy/venv/"
+		local python = mason .. (vim.fn.has("win32") == 1 and "Scripts/python.exe" or "bin/python")
+
 		dap.adapters.python = function(cb, config)
 			if config.request == "attach" then
-				---@diagnostic disable-next-line: undefined-field
 				local port = (config.connect or config).port
-				---@diagnostic disable-next-line: undefined-field
 				local host = (config.connect or config).host or "127.0.0.1"
 				cb({
 					type = "server",
-					port = assert(port, "`connect.port` is required for a python `attach` configuration"),
+					port = assert(port, "`connect.port` is required"),
 					host = host,
-					options = {
-						source_filetype = "python",
-					},
+					options = { source_filetype = "python" },
 				})
-			else
-				cb({
-					type = "executable",
-					command = vim.fn.stdpath("data") .. "\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe",
-					args = { "-m", "debugpy.adapter" },
-					options = {
-						source_filetype = "python",
-					},
-				})
+				return
 			end
+
+			if vim.fn.executable(python) ~= 1 then
+				vim.notify("debugpy python not found at: " .. python, vim.log.levels.ERROR)
+			end
+
+			cb({
+				type = "executable",
+				command = python,
+				args = { "-m", "debugpy.adapter" },
+				options = { source_filetype = "python" },
+			})
 		end
 
 		dap.configurations.python = {
