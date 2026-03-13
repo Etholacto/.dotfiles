@@ -147,13 +147,19 @@ return {
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			"stylua", --Formater Lua
-			"isort", --Formater Python
-			"black", --Formater Python
+			"isort",  --Formater Python
+			"black",  --Formater Python
 			"clang-format", --Formater C,C++
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 		require("mason-lspconfig").setup({
+			automatic_enable = {
+				exclude = {
+					"jdtls"
+				}
+			},
+
 			handlers = {
 				function(server_name)
 					if server_name ~= "jdtls" then

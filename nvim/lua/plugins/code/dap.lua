@@ -25,14 +25,14 @@ return {
 		require("mason").setup()
 
 		vim.g.mason_nvim_dap_python_path =
-			"C:\\Users\\ckornack\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+		"C:\\Users\\ckornack\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
 		require("mason-nvim-dap").setup({
 			automatic_installation = true,
 			ensure_installed = {
 				"coreclr",
 				"cpptools",
-				"javadbg",
-				"javatest",
+				-- "javadbg",
+				-- "javatest",
 				"python",
 			},
 			handlers = {},
@@ -50,20 +50,25 @@ return {
 		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
 
 		local keymap = vim.keymap
+		keymap.set("n", "<F2>", dap.clear_breakpoints(), { desc = "Remove All Breakpoint" })
+		keymap.set("n", "<F3>", function()
+			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+		end, { desc = "Set Breakpoint" })
+		keymap.set("n", "<F4>", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
 		keymap.set("n", "<F5>", function()
 			dap.continue()
 		end, { desc = "Start/Continue" })
 		keymap.set("n", "<F6>", function()
 			dapui.close()
-			dap.terminate()
+			dap.disconnet()
 		end, { desc = "End" })
 		keymap.set("n", "<F7>", dap.step_into, { desc = "Step Into" })
 		keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
-		keymap.set("n", "<F9>", dap.step_out, { desc = "Step Out" })
-		keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-		keymap.set("n", "<leader>dB", function()
-			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-		end, { desc = "Set Breakpoint" })
+		keymap.set("n", "<F9>", dap.step_out(), { desc = "Step Out" })
+		keymap.set("n", "<F10>", dap.run_to_cursor(), { desc = "To Cursor" })
+		keymap.set({ 'n', 'v' }, '<Leader>dh', function()
+			require('dap.ui.widgets').hover()
+		end)
 
 		dapui.setup({
 			layouts = {
@@ -74,16 +79,12 @@ return {
 							size = 0.7,
 						},
 						{
-							id = "watches",
-							size = 0.05,
-						},
-						{
-							id = "stacks",
-							size = 0.05,
+							id = "repl",
+							size = 0.15,
 						},
 						{
 							id = "breakpoints",
-							size = 0.1,
+							size = 0.15,
 						},
 					},
 					position = "left",
@@ -92,12 +93,7 @@ return {
 				{
 					elements = {
 						{
-							id = "repl",
-							size = 0.75,
-						},
-						{
 							id = "console",
-							size = 0.25,
 						},
 					},
 					position = "bottom",
