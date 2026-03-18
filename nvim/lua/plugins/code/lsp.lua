@@ -69,7 +69,12 @@ return {
 				-- 	Snacks.rename.rename_file()
 				-- end, "Rename File")
 				map("<leader>ca", vim.lsp.buf.code_action, "Code Action", { "n", "x" })
-				map("<leader>cf", vim.lsp.buf.format, "Code Format")
+				map("<leader>cf", function()
+					require("conform").format({
+						lsp_format = "never"
+					})
+				end
+				, "Code Format")
 				map("K", vim.lsp.buf.hover, "Hover Documentation")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)

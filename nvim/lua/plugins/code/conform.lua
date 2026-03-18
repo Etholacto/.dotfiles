@@ -7,7 +7,6 @@ return {
 				cpp = { "clang_format" },
 				c = { "clang_format " },
 				lua = { "stylua" },
-				-- Conform will run multiple formatters sequentially
 				python = { "isort", "black" },
 			},
 			formatters = {
@@ -16,9 +15,8 @@ return {
 				},
 			},
 			format_on_save = {
-				-- These options will be passed to conform.format()
 				timeout_ms = 500,
-				lsp_format = "fallback",
+				lsp_format = "never",
 			},
 		})
 	end,

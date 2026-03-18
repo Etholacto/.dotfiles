@@ -28,6 +28,16 @@ return {
 						highlight = "Directory",
 						text_align = "left",
 					},
+					{
+						filetype = "dapui_scopes",
+						text = "Debug",
+						text_align = "left",
+					},
+					{
+						filetype = "dapui_repl",
+						text = "Debug Console",
+						text_align = "right"
+					}
 				},
 			},
 			highlights = {

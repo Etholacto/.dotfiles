@@ -50,7 +50,7 @@ return {
 		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
 
 		local keymap = vim.keymap
-		keymap.set("n", "<F2>", dap.clear_breakpoints(), { desc = "Remove All Breakpoint" })
+		keymap.set("n", "<F2>", dap.clear_breakpoints, { desc = "Remove All Breakpoint" })
 		keymap.set("n", "<F3>", function()
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Set Breakpoint" })
@@ -60,12 +60,12 @@ return {
 		end, { desc = "Start/Continue" })
 		keymap.set("n", "<F6>", function()
 			dapui.close()
-			dap.disconnet()
+			dap.terminate()
 		end, { desc = "End" })
 		keymap.set("n", "<F7>", dap.step_into, { desc = "Step Into" })
 		keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
-		keymap.set("n", "<F9>", dap.step_out(), { desc = "Step Out" })
-		keymap.set("n", "<F10>", dap.run_to_cursor(), { desc = "To Cursor" })
+		keymap.set("n", "<F9>", dap.step_out, { desc = "Step Out" })
+		keymap.set("n", "<F10>", dap.run_to_cursor, { desc = "To Cursor" })
 		keymap.set({ 'n', 'v' }, '<Leader>dh', function()
 			require('dap.ui.widgets').hover()
 		end)
@@ -76,15 +76,11 @@ return {
 					elements = {
 						{
 							id = "scopes",
-							size = 0.7,
-						},
-						{
-							id = "repl",
-							size = 0.15,
+							size = 0.8,
 						},
 						{
 							id = "breakpoints",
-							size = 0.15,
+							size = 0.2,
 						},
 					},
 					position = "left",
@@ -94,10 +90,15 @@ return {
 					elements = {
 						{
 							id = "console",
+							size = 0.8
+						},
+						{
+							id = "repl",
+							size = 0.2,
 						},
 					},
-					position = "bottom",
-					size = 15,
+					position = "right",
+					size = 40,
 				},
 			},
 		})
@@ -185,13 +186,13 @@ return {
 
 		dap.configurations.python = {
 			{
-				-- The first three options are required by nvim-dap
 				type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
 				request = "launch",
 				name = "Launch file",
 				-- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
 				program = "${file}", -- This configuration will launch the current file if used.
 				pythonPath = get_python_path(),
+				console = "integratedTerminal"
 			},
 		}
 
