@@ -26,9 +26,9 @@ return {
 		require("mason").setup({
 			ui = {
 				icons = {
-					package_installed = " ",
-					package_pending = " ",
-					package_uninstalled = " ",
+					package_installed = " ",
+					package_pending = " ",
+					package_uninstalled = " ",
 				},
 			},
 		})
@@ -47,16 +47,16 @@ return {
 					vim.lsp.buf.definition()
 				end, "Goto Definition")
 				map("gD", function()
-					vim.lsp.buf.declarations()
+					vim.lsp.buf.declaration()
 				end, "Goto Declaration")
 				map("gr", function()
 					vim.lsp.buf.references()
 				end, "References")
 				map("gI", function()
-					vim.lsp.buf.implementations()
+					vim.lsp.buf.implementation()
 				end, "Goto Implementation")
 				map("gy", function()
-					vim.lsp.buf.type_definitions()
+					vim.lsp.buf.type_definition()
 				end, "Goto Type Definition")
 				map("<leader>ss", function()
 					vim.lsp.buf.document_symbol()
@@ -65,20 +65,13 @@ return {
 					vim.lsp.buf.workspace_symbol()
 				end, "LSP Workspace Symbols")
 				map("<leader>cr", vim.lsp.buf.rename, "Rename")
-				-- map("<leader>cR", function()
-				-- 	Snacks.rename.rename_file()
-				-- end, "Rename File")
 				map("<leader>ca", vim.lsp.buf.code_action, "Code Action", { "n", "x" })
 				map("<leader>cf", function()
-					require("conform").format({
-						lsp_format = "never"
-					})
-				end
-				, "Code Format")
+					require("conform").format({ lsp_format = "never" })
+				end, "Code Format")
 				map("K", vim.lsp.buf.hover, "Hover Documentation")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
-
 				if client and client.server_capabilities.inlayHintProvider then
 					vim.lsp.inlay_hint.enable(true)
 				else
@@ -95,18 +88,16 @@ return {
 
 		vim.diagnostic.config({
 			virtual_text = {
-				prefix = "", -- Could be '●', '▎', │, 'x', '■', , 
+				prefix = "", -- Could be '●', '▎', │, 'x', '■', ,
 			},
-			jump = {
-				float = true,
-			},
+			jump = { float = true },
 			float = { border = "single" },
 			signs = {
 				text = {
-					[vim.diagnostic.severity.ERROR] = " ",
-					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
 					[vim.diagnostic.severity.HINT] = "󰌶 ",
-					[vim.diagnostic.severity.INFO] = " ",
+					[vim.diagnostic.severity.INFO] = " ",
 				},
 				numhl = {
 					[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
@@ -117,70 +108,60 @@ return {
 			},
 		})
 
-		-- Nvim-cmp supports additional completion capabilities, so broadcast that to servers
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
+		-- Base servers (simple configs without dedicated lang files)
 		local servers = {
-			clangd = {
-				cmd = {
-					"clangd",
-				},
-			},
-			ltex = {
-				filetypes = { "latex", "tex", "bib" },
-			},
-			lua_ls = {
-				settings = {
-					Lua = {
-						workspace = { checkThirdParty = false },
-						telemetry = { enable = false },
-						diagnostics = { globals = { "vim" } },
-					},
-				},
-			},
-			marksman = {},
-			jdtls = {
-				autostart = false,
-			},
-			jsonls = {},
-			glsl_analyzer = {},
-			omnisharp = {},
-			pylsp = {},
+			marksman = {}, -- markdown LSP
+			omnisharp = {}, -- C#
 		}
+
+		-- Merge language-specific server configs and collect formatters.
+		-- ltex removed: replaced by texlab in latex.lua.
+		-- jsonls removed: moved to json.lua (SchemaStore on_new_config).
+		local lang_modules = {
+			require("plugins.lang.clangd"),
+			require("plugins.lang.lua"),
+			require("plugins.lang.python"),
+			require("plugins.lang.godot"),
+			require("plugins.lang.java"),
+			require("plugins.lang.json"),
+			require("plugins.lang.latex"),
+			require("plugins.lang.typescript"),
+			require("plugins.lang.sql"),
+		}
+
+		local extra_tools = {}
+		for _, lang in ipairs(lang_modules) do
+			if lang.lsp then
+				servers = vim.tbl_deep_extend("force", servers, lang.lsp)
+			end
+			if lang.formatters then
+				vim.list_extend(extra_tools, lang.formatters)
+			end
+		end
 
 		local ensure_installed = vim.tbl_keys(servers or {})
-		vim.list_extend(ensure_installed, {
-			"stylua", --Formater Lua
-			"isort",  --Formater Python
-			"black",  --Formater Python
-			"clang-format", --Formater C,C++
-		})
+		vim.list_extend(ensure_installed, extra_tools)
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-		require("mason-lspconfig").setup({
-			automatic_enable = {
-				exclude = {
-					"jdtls"
-				}
-			},
+		-- Configure each server before automatic_enable runs.
+		-- In the new mason-lspconfig API, handlers are no longer the right place
+		-- to call vim.lsp.config — do it directly here so server names stay clean.
+		for server_name, server in pairs(servers) do
+			server = vim.tbl_deep_extend("force", {}, server)
+			server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+			vim.lsp.config(server_name, server)
+		end
 
-			handlers = {
-				function(server_name)
-					if server_name ~= "jdtls" then
-						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						vim.lsp.config(server_name, server)
-					end
-				end,
-			},
+		-- automatic_enable calls vim.lsp.enable() for every Mason-installed server.
+		require("mason-lspconfig").setup({
+			automatic_enable = { exclude = { "jdtls" } },
 		})
 
-		-- Can't add 'gdscript' to servers, not listed on Mason. Manually configure via lspconfig
-		local gdscript_config = {
-			capabilities = capabilities,
-			settings = {},
-		}
-		vim.lsp.config("gdscript", gdscript_config)
+		-- gdscript is not on Mason; configure and enable it manually.
+		require("plugins.lang.godot").setup_lsp(capabilities)
+		vim.lsp.enable("gdscript")
 	end,
 }

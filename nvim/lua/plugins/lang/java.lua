@@ -1,9 +1,8 @@
-return {
+local M = {
 	"mfussenegger/nvim-jdtls",
 	ft = "java",
 	opts = function()
 		local lombok_jar = vim.fn.expand("$MASON/share/jdtls/lombok.jar")
-
 		local root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw", "pom.xml" }, { upward = true })[1])
 
 		return {
@@ -28,9 +27,7 @@ return {
 					table.insert(cmd, string.format("--jvm-arg=-javaagent:%s", lombok_jar))
 				end
 
-				local root_dir = opts.root_dir
-				local project_name = opts.project_name(root_dir)
-
+				local project_name = opts.project_name(opts.root_dir)
 				if project_name then
 					vim.list_extend(cmd, {
 						"-configuration",
@@ -48,9 +45,7 @@ return {
 			settings = {
 				java = {
 					inlayHints = {
-						parameterNames = {
-							enabled = "all",
-						},
+						parameterNames = { enabled = "all" },
 					},
 				},
 			},
@@ -63,8 +58,7 @@ return {
 
 		local function extend_bundles(patterns)
 			for _, pattern in ipairs(patterns) do
-				local matches = vim.fn.glob(pattern, true, true)
-				for _, bundle in ipairs(matches) do
+				for _, bundle in ipairs(vim.fn.glob(pattern, true, true)) do
 					table.insert(bundles, bundle)
 				end
 			end
@@ -86,17 +80,13 @@ return {
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
-			local config = {
+			require("jdtls").start_or_attach({
 				cmd = opts.full_cmd(opts),
 				root_dir = opts.root_dir,
-				init_options = {
-					bundles = bundles,
-				},
+				init_options = { bundles = bundles },
 				settings = opts.settings,
 				capabilities = capabilities,
-			}
-
-			require("jdtls").start_or_attach(config)
+			})
 		end
 
 		vim.api.nvim_create_autocmd("FileType", {
@@ -107,13 +97,48 @@ return {
 		vim.api.nvim_create_autocmd("LspAttach", {
 			callback = function(args)
 				local client = vim.lsp.get_client_by_id(args.data.client_id)
-				if client and client.name == "jdtls" then
-					if opts.dap and mason_registry.is_installed("java-debug-adapter") then
-						require("jdtls").setup_dap(opts.dap)
-						require("jdtls.dap").setup_dap_main_class_configs()
-					end
+				if not (client and client.name == "jdtls") then return end
+
+				-- DAP setup
+				if opts.dap and mason_registry.is_installed("java-debug-adapter") then
+					require("jdtls").setup_dap(opts.dap)
+					require("jdtls.dap").setup_dap_main_class_configs()
 				end
+
+				-- jdtls-Specific keymaps
+				local map = function(mode, keys, fn, desc)
+					vim.keymap.set(mode, keys, fn, { buffer = args.buf, desc = "Java: " .. desc })
+				end
+				map("n", "<leader>co",  require("jdtls").organize_imports,       "Organize Imports")
+				map("n", "<leader>cgs", require("jdtls").super_implementation,   "Goto Super")
+				map("n", "<leader>cxv", require("jdtls").extract_variable,       "Extract Variable")
+				map("n", "<leader>cxc", require("jdtls").extract_constant,       "Extract Constant")
+				map("n", "<leader>cxm", require("jdtls").extract_method,         "Extract Method")
+				map("x", "<leader>cxv", require("jdtls").extract_variable,       "Extract Variable")
+				map("x", "<leader>cxc", require("jdtls").extract_constant,       "Extract Constant")
+				map("x", "<leader>cxm", function()
+					require("jdtls").extract_method(true)
+				end, "Extract Method")
 			end,
 		})
+
+		attach_jdtls()
 	end,
 }
+
+M.lsp = { jdtls = { autostart = false } }
+M.formatters = { "google-java-format" }
+
+function M.setup_dap(dap)
+	dap.configurations.java = {
+		{
+			type = "java",
+			name = "Debug (Attach)",
+			request = "attach",
+			hostName = "127.0.0.1",
+			port = 5005,
+		},
+	}
+end
+
+return M

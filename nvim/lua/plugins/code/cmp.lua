@@ -9,7 +9,10 @@ return {
 	},
 	version = "*",
 	opts = {
-		keymap = { preset = "default" },
+		keymap = {
+			preset = "default",
+			["<CR>"] = { "accept", "fallback" },
+		},
 		appearance = {
 			use_nvim_cmp_as_default = true,
 			nerd_font_variant = "mono",
@@ -17,6 +20,23 @@ return {
 		snippets = { preset = "luasnip" },
 		sources = {
 			default = { "snippets", "lsp", "path", "buffer" },
+			-- Dadbod completion scoped to SQL filetypes only.
+			per_filetype = {
+				sql   = { "dadbod", "snippets", "lsp", "path" },
+				mysql = { "dadbod", "snippets", "lsp", "path" },
+				plsql = { "dadbod", "snippets", "lsp", "path" },
+			},
+			providers = {
+				dadbod = {
+					name = "Dadbod",
+					module = "vim_dadbod_completion.blink",
+				},
+			},
+		},
+		completion = {
+			accept = {
+				auto_brackets = { enabled = true },
+			},
 		},
 	},
 	opts_extend = { "sources.default" },

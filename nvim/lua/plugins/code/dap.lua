@@ -1,6 +1,6 @@
+---@diagnostic disable: missing-fields
 return {
 	"mfussenegger/nvim-dap",
-	event = "BufRead",
 	dependencies = {
 		{
 			"rcarriga/nvim-dap-ui",
@@ -22,35 +22,34 @@ return {
 		local dap = require("dap")
 		local dapui = require("dapui")
 
-		require("mason").setup()
-
-		vim.g.mason_nvim_dap_python_path =
-		"C:\\Users\\ckornack\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
 		require("mason-nvim-dap").setup({
 			automatic_installation = true,
 			ensure_installed = {
 				"coreclr",
-				"cpptools",
-				-- "javadbg",
-				-- "javatest",
-				"python",
+				"codelldb",
+				"javadbg",
+				"javatest",
+				"js-debug-adapter",
 			},
-			handlers = {},
+			handlers = {
+				--Prevent mason to override the nvim-dap-python setup
+				python = function() end,
+			},
 		})
 
 		vim.fn.sign_define(
 			"DapBreakpoint",
-			{ text = "", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
+			{ text = "", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
 		)
 		vim.fn.sign_define(
 			"DapBreakpointCondition",
 			{ text = "󰋗", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
 		)
 		vim.fn.sign_define("DapBreakpointRejected", { text = "󰅙", texthl = "Comment", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
+		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
 
 		local keymap = vim.keymap
-		keymap.set("n", "<F2>", dap.clear_breakpoints, { desc = "Remove All Breakpoint" })
+		keymap.set("n", "<F2>", dap.clear_breakpoints, { desc = "Remove All Breakpoints" })
 		keymap.set("n", "<F3>", function()
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Set Breakpoint" })
@@ -66,36 +65,24 @@ return {
 		keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
 		keymap.set("n", "<F9>", dap.step_out, { desc = "Step Out" })
 		keymap.set("n", "<F10>", dap.run_to_cursor, { desc = "To Cursor" })
-		keymap.set({ 'n', 'v' }, '<Leader>dh', function()
-			require('dap.ui.widgets').hover()
+		keymap.set({ "n", "v" }, "<Leader>dh", function()
+			require("dap.ui.widgets").hover()
 		end)
 
 		dapui.setup({
 			layouts = {
 				{
 					elements = {
-						{
-							id = "scopes",
-							size = 0.8,
-						},
-						{
-							id = "breakpoints",
-							size = 0.2,
-						},
+						{ id = "scopes", size = 0.8 },
+						{ id = "breakpoints", size = 0.2 },
 					},
 					position = "left",
 					size = 40,
 				},
 				{
 					elements = {
-						{
-							id = "console",
-							size = 0.8
-						},
-						{
-							id = "repl",
-							size = 0.2,
-						},
+						{ id = "console", size = 0.8 },
+						{ id = "repl", size = 0.2 },
 					},
 					position = "right",
 					size = 40,
@@ -109,119 +96,11 @@ return {
 		dap.listeners.before.launch.dapui_config = function()
 			dapui.open()
 		end
-		-- dap.listeners.after.event_terminated.dapui_config = function()
-		-- 	dapui.close()
-		-- end
-		-- dap.listeners.after.event_exited.dapui_config = function()
-		-- 	dapui.close()
-		-- end
 
-		local function get_python_path()
-			local is_win = vim.fn.has("win32") == 1
-
-			--Conda Envs
-			local conda_prefix = vim.env.CONDA_PREFIX
-			if conda_prefix and conda_prefix ~= "" then
-				local conda_python = is_win and (conda_prefix .. "\\python.exe") or (conda_prefix .. "/bin/python")
-				if vim.fn.executable(conda_python) == 1 then
-					return conda_python
-				end
-			end
-
-			--Local Envs
-			local cwd = vim.fn.getcwd()
-			local candidates
-			if is_win then
-				candidates = {
-					cwd .. "\\env\\Scripts\\python.exe",
-					cwd .. "\\venv\\Scripts\\python.exe",
-					cwd .. "\\.venv\\Scripts\\python.exe",
-				}
-			else
-				candidates = {
-					cwd .. "/env/bin/python",
-					cwd .. "/venv/bin/python",
-					cwd .. "/.venv/bin/python",
-				}
-			end
-
-			for _, path in ipairs(candidates) do
-				if vim.fn.executable(path) == 1 then
-					return path
-				end
-			end
-
-			-- Final fallback: system python
-			return vim.fn.exepath("python")
-		end
-
-		local data = vim.fn.stdpath("data")
-		local mason = data .. "/mason/packages/debugpy/venv/"
-		local python = mason .. (vim.fn.has("win32") == 1 and "Scripts/python.exe" or "bin/python")
-
-		dap.adapters.python = function(cb, config)
-			if config.request == "attach" then
-				local port = (config.connect or config).port
-				local host = (config.connect or config).host or "127.0.0.1"
-				cb({
-					type = "server",
-					port = assert(port, "`connect.port` is required"),
-					host = host,
-					options = { source_filetype = "python" },
-				})
-				return
-			end
-
-			if vim.fn.executable(python) ~= 1 then
-				vim.notify("debugpy python not found at: " .. python, vim.log.levels.ERROR)
-			end
-
-			cb({
-				type = "executable",
-				command = python,
-				args = { "-m", "debugpy.adapter" },
-				options = { source_filetype = "python" },
-			})
-		end
-
-		dap.configurations.python = {
-			{
-				type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
-				request = "launch",
-				name = "Launch file",
-				-- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-				program = "${file}", -- This configuration will launch the current file if used.
-				pythonPath = get_python_path(),
-				console = "integratedTerminal"
-			},
-		}
-
-		--Godot config
-		dap.adapters.godot = {
-			type = "server",
-			host = "127.0.0.1",
-			port = 6006,
-		}
-
-		dap.configurations.gdscript = {
-			{
-				type = "godot",
-				request = "launch",
-				name = "Launch scene",
-				project = "${workspaceFolder}",
-				launch_scene = true,
-			},
-		}
-
-		--Java config
-		dap.configurations.java = {
-			{
-				type = "java",
-				name = "Debug (Attach)",
-				request = "attach",
-				hostName = "127.0.0.1",
-				port = 5005,
-			},
-		}
+		-- Language-specific adapter and config setup
+		require("plugins.lang.clangd").setup_dap(dap)
+		require("plugins.lang.godot").setup_dap(dap)
+		require("plugins.lang.java").setup_dap(dap)
+		require("plugins.lang.typescript").setup_dap(dap)
 	end,
 }

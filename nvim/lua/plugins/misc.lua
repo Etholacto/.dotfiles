@@ -1,11 +1,5 @@
 return {
 	{
-		-- More functionality for connection between nvim and godot
-		"habamax/vim-godot",
-		ft = "gdscript",
-		event = "BufReadPre",
-	},
-	{
 		-- Changes background to match colour (Hex, names var, etc.)
 		"NvChad/nvim-colorizer.lua",
 		event = { "BufReadPre", "BufNewFile" },
@@ -39,6 +33,22 @@ return {
 		opts = {
 			-- configurations go here
 		},
+	},
+	{
+		"echasnovski/mini.comment",
+		version = "*",
+		event = "VeryLazy",
+		config = function()
+			require("mini.comment").setup({})
+		end,
+	},
+	{
+		"echasnovski/mini.ai",
+		version = "*",
+		event = "VeryLazy",
+		config = function()
+			require("mini.ai").setup({})
+		end,
 	},
 	{
 		"MagicDuck/grug-far.nvim",

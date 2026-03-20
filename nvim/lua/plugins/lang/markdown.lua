@@ -28,7 +28,7 @@ return {
 			},
 			heading = {
 				sign = false,
-				icons = {},
+				icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
 			},
 			checkbox = {
 				enabled = false,
