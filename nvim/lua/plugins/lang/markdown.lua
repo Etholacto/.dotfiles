@@ -1,4 +1,4 @@
-return {
+local M = {
 	{
 		"iamcco/markdown-preview.nvim",
 		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -40,3 +40,7 @@ return {
 		end,
 	},
 }
+
+M.lsp = { marksman = {} }
+
+return M

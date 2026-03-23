@@ -25,6 +25,7 @@ M.lsp = {
 }
 
 M.formatters = { "clang-format" }
+M.dap_adapters = { "codelldb" }
 
 function M.setup_dap(dap)
 	-- codelldb adapter — installed via mason-nvim-dap "codelldb" entry in dap.lua

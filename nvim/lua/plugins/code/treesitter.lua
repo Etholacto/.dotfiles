@@ -4,8 +4,6 @@ return {
 	event = { "BufReadPost", "BufNewFile" },
 	dependencies = {
 		{
-			-- Textobjects are now configured through their own plugin, not inside
-			-- nvim-treesitter setup (module system was removed in the rewrite).
 			"nvim-treesitter/nvim-treesitter-textobjects",
 			config = function()
 				require("nvim-treesitter-textobjects").setup({
@@ -24,9 +22,6 @@ return {
 	},
 	build = ":TSUpdate",
 	config = function()
-		-- The rewrite removed the module system (highlight, indent, autotag,
-		-- smart_rename, textobjects). Highlighting is handled by neovim's
-		-- built-in treesitter; parsers here just need to be installed.
 		require("nvim-treesitter").setup({
 			ensure_installed = {
 				"c",
@@ -56,5 +51,13 @@ return {
 			sync_install = false,
 			highlight = { enable = true },
 		})
+
+		vim.schedule(function()
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+					pcall(vim.treesitter.start, bufnr)
+				end
+			end
+		end)
 	end,
 }

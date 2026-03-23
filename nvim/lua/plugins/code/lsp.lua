@@ -111,18 +111,13 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
-		-- Base servers (simple configs without dedicated lang files)
-		local servers = {
-			marksman = {}, -- markdown LSP
-			omnisharp = {}, -- C#
-		}
+		local servers = {}
 
-		-- Merge language-specific server configs and collect formatters.
-		-- ltex removed: replaced by texlab in latex.lua.
-		-- jsonls removed: moved to json.lua (SchemaStore on_new_config).
 		local lang_modules = {
 			require("plugins.lang.clangd"),
+			require("plugins.lang.csharp"),
 			require("plugins.lang.lua"),
+			require("plugins.lang.markdown"),
 			require("plugins.lang.python"),
 			require("plugins.lang.godot"),
 			require("plugins.lang.java"),
@@ -142,13 +137,12 @@ return {
 			end
 		end
 
+
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, extra_tools)
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 		-- Configure each server before automatic_enable runs.
-		-- In the new mason-lspconfig API, handlers are no longer the right place
-		-- to call vim.lsp.config — do it directly here so server names stay clean.
 		for server_name, server in pairs(servers) do
 			server = vim.tbl_deep_extend("force", {}, server)
 			server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
@@ -163,5 +157,18 @@ return {
 		-- gdscript is not on Mason; configure and enable it manually.
 		require("plugins.lang.godot").setup_lsp(capabilities)
 		vim.lsp.enable("gdscript")
+
+		vim.schedule(function()
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+					local ft = vim.bo[bufnr].filetype
+					if ft and ft ~= "" then
+						vim.api.nvim_buf_call(bufnr, function()
+							vim.cmd("doautocmd FileType " .. ft)
+						end)
+					end
+				end
+			end
+		end)
 	end,
 }

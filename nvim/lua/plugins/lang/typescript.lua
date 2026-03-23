@@ -19,6 +19,7 @@ M.lsp = {
 }
 
 M.formatters = { "prettier" }
+M.dap_adapters = { "js-debug-adapter" }
 
 function M.setup_dap(dap)
 	-- js-debug-adapter installed via mason-nvim-dap "js-debug-adapter" entry.

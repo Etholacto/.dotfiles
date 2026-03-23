@@ -22,31 +22,39 @@ return {
 		local dap = require("dap")
 		local dapui = require("dapui")
 
+		local lang_modules = {
+			require("plugins.lang.clangd"),
+			require("plugins.lang.csharp"),
+			require("plugins.lang.java"),
+			require("plugins.lang.typescript"),
+		}
+
+		local dap_adapters = {}
+		for _, lang in ipairs(lang_modules) do
+			if lang.dap_adapters then
+				vim.list_extend(dap_adapters, lang.dap_adapters)
+			end
+		end
+
 		require("mason-nvim-dap").setup({
 			automatic_installation = true,
-			ensure_installed = {
-				"coreclr",
-				"codelldb",
-				"javadbg",
-				"javatest",
-				"js-debug-adapter",
-			},
+			ensure_installed = dap_adapters,
 			handlers = {
-				--Prevent mason to override the nvim-dap-python setup
+				-- Prevent mason-nvim-dap from overriding nvim-dap-python's setup
 				python = function() end,
 			},
 		})
 
 		vim.fn.sign_define(
 			"DapBreakpoint",
-			{ text = "", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
+			{ text = "", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
 		)
 		vim.fn.sign_define(
 			"DapBreakpointCondition",
 			{ text = "󰋗", texthl = "DiagnosticError", linehl = "", numhl = "DiagnosticError" }
 		)
 		vim.fn.sign_define("DapBreakpointRejected", { text = "󰅙", texthl = "Comment", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
+		vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticOk", linehl = "", numhl = "DiagnosticOk" })
 
 		local keymap = vim.keymap
 		keymap.set("n", "<F2>", dap.clear_breakpoints, { desc = "Remove All Breakpoints" })

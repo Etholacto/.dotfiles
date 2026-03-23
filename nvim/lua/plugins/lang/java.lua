@@ -128,6 +128,7 @@ local M = {
 
 M.lsp = { jdtls = { autostart = false } }
 M.formatters = { "google-java-format" }
+M.dap_adapters = { "javadbg", "javatest" }
 
 function M.setup_dap(dap)
 	dap.configurations.java = {
