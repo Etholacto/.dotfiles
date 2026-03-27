@@ -51,6 +51,15 @@ require("lazy").setup({
 	},
 })
 
+if vim.fn.has("win32") == 1 then
+	vim.opt.shell = "pwsh"
+	vim.opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
+	vim.opt.shellquote = ""
+	vim.opt.shellxquote = ""
+	vim.opt.shellpipe = "| Out-File -Encoding UTF8 %s"
+	vim.opt.shellredir = "| Out-File -Encoding UTF8 %s"
+end
+
 -- These modules are not loaded by lazy
 require("core.options")
 require("core.keymaps")

@@ -57,8 +57,12 @@ keymap.set("n", "<A-6>", "<Cmd>BufferLineGoToBuffer 6<CR>")
 keymap.set("n", "<A-7>", "<Cmd>BufferLineGoToBuffer 7<CR>")
 keymap.set("n", "<A-8>", "<Cmd>BufferLineGoToBuffer 8<CR>")
 keymap.set("n", "<A-9>", "<Cmd>BufferLineGoToBuffer 9<CR>")
+keymap.set("n", "<A-n>", "<Cmd>BufferLineCycleNext<CR>")
+keymap.set("n", "<A-p>", "<Cmd>BufferLineCyclePrev<CR>")
+keymap.set("n", "<A-l>", "<Cmd>BufferLineMoveNext<CR>")
+keymap.set("n", "<A-h>", "<Cmd>BufferLineMovePrev<CR>")
 keymap.set("n", "<A-w>", "<Cmd>bdelete<CR>")
-keymap.set("n", "<A-q>", "<Cmd>q<CR>")
+keymap.set("n", "<A-q>", "<Cmd>wqa<CR>")
 
 -- diagnostic
 keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
