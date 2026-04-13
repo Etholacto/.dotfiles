@@ -3,4 +3,5 @@ local M = {}
 M.lsp = { omnisharp = {} }
 M.dap_adapters = { "coreclr" }
 
-return M
+package.loaded["plugins.lang.csharp"] = M
+return {}

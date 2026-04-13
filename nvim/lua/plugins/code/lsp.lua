@@ -26,9 +26,9 @@ return {
 		require("mason").setup({
 			ui = {
 				icons = {
-					package_installed = " ",
-					package_pending = " ",
-					package_uninstalled = " ",
+					package_installed = " ",
+					package_pending = " ",
+					package_uninstalled = " ",
 				},
 			},
 		})
@@ -87,17 +87,18 @@ return {
 		end
 
 		vim.diagnostic.config({
+			update_in_insert = false,
 			virtual_text = {
-				prefix = "", -- Could be '●', '▎', │, 'x', '■', ,
+				prefix = "", -- Could be '●', '▎', │, 'x', '■', ,
 			},
 			jump = { float = true },
 			float = { border = "single" },
 			signs = {
 				text = {
-					[vim.diagnostic.severity.ERROR] = " ",
-					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
 					[vim.diagnostic.severity.HINT] = "󰌶 ",
-					[vim.diagnostic.severity.INFO] = " ",
+					[vim.diagnostic.severity.INFO] = " ",
 				},
 				numhl = {
 					[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
@@ -136,7 +137,6 @@ return {
 				vim.list_extend(extra_tools, lang.formatters)
 			end
 		end
-
 
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, extra_tools)

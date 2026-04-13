@@ -102,27 +102,13 @@ local M = {
 				},
 				search = search,
 			})
-
-			-- lazy.nvim's ft-loading re-fires FileType buffer-locally, skipping
-			-- pattern-based autocmds (like vim.lsp.enable's FileType handler).
-			-- Explicitly re-fire so basedpyright attaches on the first Python file.
 			vim.api.nvim_exec_autocmds("FileType", { pattern = "python" })
 		end,
 	},
 }
 
 M.lsp = {
-	basedpyright = {
-		settings = {
-			basedpyright = {
-				analysis = {
-					autoSearchPaths = true,
-					useLibraryCodeForTypes = true,
-					diagnosticMode = "workspace",
-				},
-			},
-		},
-	},
+	pylsp = {},
 }
 
 --Debugpy in formatter since it could interfere with nvim-dap-python setup if its in regular debugger
