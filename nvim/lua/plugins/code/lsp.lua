@@ -113,20 +113,14 @@ return {
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
 		local servers = {}
+		local lang_modules = {}
 
-		local lang_modules = {
-			require("plugins.lang.clangd"),
-			require("plugins.lang.csharp"),
-			require("plugins.lang.lua"),
-			require("plugins.lang.markdown"),
-			require("plugins.lang.python"),
-			require("plugins.lang.godot"),
-			require("plugins.lang.java"),
-			require("plugins.lang.json"),
-			require("plugins.lang.latex"),
-			require("plugins.lang.typescript"),
-			require("plugins.lang.sql"),
-		}
+		for _, entry in ipairs(vim.fn.readdir("../lang")) do
+			if entry:match("%.lua$") then
+				local module = entry:gsub("%.lua$", "")
+				table.insert(lang_modules, require("plugins.lang." .. module))
+			end
+		end
 
 		local extra_tools = {}
 		for _, lang in ipairs(lang_modules) do

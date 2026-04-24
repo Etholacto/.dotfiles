@@ -44,29 +44,31 @@ return {
 				color_devicons = true,
 				use_less = true,
 				set_env = { ["COLORTERM"] = "truecolor" },
-				extensions = {
-					file_browser = {
-						hijack_netrw = true,
-						hidden = true,
-						find_command = {
-							"rg",
-							"--files",
-							"--hidden",
-							"--glob=!**/.git/*",
-							"--glob=!**/.idea/*",
-							"--glob=!**/.vscode/*",
-							"--glob=!**/build/*",
-							"--glob=!**/dist/*",
-							"--glob=!**/yarn.lock",
-							"--glob=!**/package-lock.json",
-						},
+			},
+			extensions = {
+				file_browser = {
+					hijack_netrw = true,
+					no_ignore = true,
+					hidden = true,
+					collapse_dirs = true,
+					find_command = {
+						"rg",
+						"--files",
+						"--hidden",
+						"--glob=!**/.git/*",
+						"--glob=!**/.idea/*",
+						"--glob=!**/.vscode/*",
+						"--glob=!**/build/*",
+						"--glob=!**/dist/*",
+						"--glob=!**/yarn.lock",
+						"--glob=!**/package-lock.json",
 					},
-					fzf = {
-						fuzzy = true,
-						override_generic_sorter = true,
-						override_file_sorter = true,
-						case_mode = "smart_case",
-					},
+				},
+				fzf = {
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+					case_mode = "smart_case",
 				},
 			},
 		})

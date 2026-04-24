@@ -23,16 +23,18 @@ return {
 		},
 	},
 	{
-		"utilyre/barbecue.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		version = "*",
+		"Bekaboo/dropbar.nvim",
+		-- optional, but required for fuzzy finder support
 		dependencies = {
-			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons", -- optional dependency
+			"nvim-telescope/telescope-fzf-native.nvim",
+			build = "make",
 		},
-		opts = {
-			-- configurations go here
-		},
+		config = function()
+			local dropbar_api = require("dropbar.api")
+			vim.keymap.set("n", "<Leader>;", dropbar_api.pick, { desc = "Pick symbols in winbar" })
+			vim.keymap.set("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
+			vim.keymap.set("n", "];", dropbar_api.select_next_context, { desc = "Select next context" })
+		end,
 	},
 	{
 		"echasnovski/mini.comment",
