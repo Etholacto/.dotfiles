@@ -7,12 +7,14 @@ return {
 			"nvim-telescope/telescope-fzf-native.nvim",
 			build = "make",
 		},
+		"FabianWirth/search.nvim",
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
 	},
 	config = function()
 		local telescope = require("telescope")
 		local builtin = require("telescope.builtin")
+		local search = require("search")
 
 		telescope.setup({
 			defaults = {
@@ -76,30 +78,20 @@ return {
 		telescope.load_extension("file_browser")
 		telescope.load_extension("fzf")
 
-		function SearchPath(path)
-			if path ~= "" then
-				builtin.live_grep({
-					search_dirs = { path or "." },
-				})
-			end
-		end
-
 		-- set keymaps
-		local keymap = vim.keymap -- for conciseness
-
+		local keymap = vim.keymap
 		keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Fuzzy find files" })
 		keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Find recent files" })
 		keymap.set("n", "<leader>sw", builtin.current_buffer_fuzzy_find, { desc = "Fuzzy find current file" })
-		keymap.set("n", "<leader>sG", function()
-			SearchPath("%:p")
+		keymap.set("n", "<leader>sg", function()
+			search.open()
 		end, { desc = "Find in Workspace" })
-		keymap.set("n", "<leader>sg", builtin.grep_string, { desc = "Search word in Workspace" })
+		keymap.set("n", "<leader>sG", builtin.grep_string, { desc = "Search word in Workspace" })
 		keymap.set(
 			"n",
 			"<leader>fb",
 			":Telescope file_browser path=%:p:h select_buffer=true hidden=true<CR>",
-			{ desc = "File browser in current buffer" },
-			{ noremap = true }
+			{ desc = "File browser in current buffer", noremap = true }
 		)
 		keymap.set("n", "<leader>fm", builtin.man_pages, { desc = "Find man pages" })
 	end,
