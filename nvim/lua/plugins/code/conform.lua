@@ -32,7 +32,7 @@ return {
 			},
 			formatters = {
 				clang_format = {
-					args = { "--style=file:" .. vim.fn.stdpath("config") .. "/lua/plugins/lang/.clang-format" },
+					args = { "--style=file:" .. vim.fn.stdpath("config") .. "/lua/lang/.clang-format" },
 				},
 				sqlfluff = {
 					-- dialect can be overridden per-project via a .sqlfluff file

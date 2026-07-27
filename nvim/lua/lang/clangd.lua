@@ -64,5 +64,4 @@ function M.setup_dap(dap)
 	end
 end
 
-package.loaded["plugins.lang.clangd"] = M
-return {}
+return M

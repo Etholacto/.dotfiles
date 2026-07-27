@@ -91,7 +91,19 @@ return {
 			virtual_text = {
 				prefix = "", -- Could be '●', '▎', │, 'x', '■', ,
 			},
-			jump = { float = true },
+			jump = {
+				on_jump = function(diagnostic, bufnr)
+					if not diagnostic then
+						return
+					end
+					vim.diagnostic.show(
+						diagnostic.namespace,
+						bufnr,
+						{ diagnostic },
+						{ virtual_lines = { current_line = true }, virtual_text = false }
+					)
+				end,
+			},
 			float = { border = "single" },
 			signs = {
 				text = {
@@ -115,10 +127,9 @@ return {
 		local servers = {}
 		local lang_modules = {}
 
-		for _, entry in ipairs(vim.fn.readdir("../lang")) do
-			if entry:match("%.lua$") then
-				local module = entry:gsub("%.lua$", "")
-				table.insert(lang_modules, require("plugins.lang." .. module))
+		for name, ftype in vim.fs.dir(vim.fn.stdpath("config") .. "/lua/lang") do
+			if ftype == "file" and name:match("%.lua$") then
+				table.insert(lang_modules, require("lang." .. name:gsub("%.lua$", "")))
 			end
 		end
 
@@ -149,7 +160,7 @@ return {
 		})
 
 		-- gdscript is not on Mason; configure and enable it manually.
-		require("plugins.lang.godot").setup_lsp(capabilities)
+		require("lang.godot").setup_lsp(capabilities)
 		vim.lsp.enable("gdscript")
 
 		vim.schedule(function()

@@ -23,10 +23,10 @@ return {
 		local dapui = require("dapui")
 
 		local lang_modules = {
-			require("plugins.lang.clangd"),
-			require("plugins.lang.csharp"),
-			require("plugins.lang.java"),
-			require("plugins.lang.typescript"),
+			require("lang.clangd"),
+			require("lang.csharp"),
+			require("lang.java"),
+			require("lang.typescript"),
 		}
 
 		local dap_adapters = {}
@@ -106,9 +106,9 @@ return {
 		end
 
 		-- Language-specific adapter and config setup
-		require("plugins.lang.clangd").setup_dap(dap)
-		require("plugins.lang.godot").setup_dap(dap)
-		require("plugins.lang.java").setup_dap(dap)
-		require("plugins.lang.typescript").setup_dap(dap)
+		require("lang.clangd").setup_dap(dap)
+		require("lang.godot").setup_dap(dap)
+		require("lang.java").setup_dap(dap)
+		require("lang.typescript").setup_dap(dap)
 	end,
 }

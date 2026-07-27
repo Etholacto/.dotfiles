@@ -1,6 +1,10 @@
-local M = {
-	"b0o/SchemaStore.nvim",
-	lazy = true, -- loaded on demand inside on_new_config below
+local M = {}
+
+M.plugins = {
+	{
+		"b0o/SchemaStore.nvim",
+		lazy = true, -- loaded on demand inside on_new_config below
+	},
 }
 
 M.lsp = {

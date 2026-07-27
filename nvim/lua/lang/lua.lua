@@ -14,5 +14,4 @@ M.lsp = {
 
 M.formatters = { "stylua" }
 
-package.loaded["plugins.lang.lua"] = M
-return {}
+return M

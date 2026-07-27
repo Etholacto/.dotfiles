@@ -1,5 +1,7 @@
 local M = {}
 
+M.plugins = { { "habamax/vim-godot", ft = "gdscript", event = "BufReadPre" } }
+
 M.lsp = {
 	glsl_analyzer = {},
 }
@@ -29,5 +31,4 @@ function M.setup_dap(dap)
 	}
 end
 
-package.loaded["plugins.lang.godot"] = M
-return { "habamax/vim-godot", ft = "gdscript", event = "BufReadPre" }
+return M

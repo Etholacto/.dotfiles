@@ -1,4 +1,6 @@
-local M = {
+local M = {}
+
+M.plugins = {
 	{
 		"mfussenegger/nvim-dap-python",
 		ft = "python",
@@ -114,5 +116,4 @@ M.lsp = {
 --Debugpy in formatter since it could interfere with nvim-dap-python setup if its in regular debugger
 M.formatters = { "debugpy", "isort", "black" }
 
-package.loaded["plugins.lang.python"] = M
 return M

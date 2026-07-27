@@ -5,6 +5,7 @@ return {
 		{
 			"L3MON4D3/LuaSnip",
 			version = "v2.*",
+			build = "make install_jsregexp",
 		},
 	},
 	version = "*",
@@ -22,7 +23,7 @@ return {
 			default = { "snippets", "lsp", "path", "buffer" },
 			-- Dadbod completion scoped to SQL filetypes only.
 			per_filetype = {
-				sql   = { "dadbod", "snippets", "lsp", "path" },
+				sql = { "dadbod", "snippets", "lsp", "path" },
 				mysql = { "dadbod", "snippets", "lsp", "path" },
 				plsql = { "dadbod", "snippets", "lsp", "path" },
 			},

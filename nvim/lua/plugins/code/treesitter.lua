@@ -5,18 +5,18 @@ return {
 	dependencies = {
 		{
 			"nvim-treesitter/nvim-treesitter-textobjects",
-			config = function()
-				require("nvim-treesitter-textobjects").setup({
-					select = {
-						enable = true,
-						lookahead = true,
-						keymaps = {
-							["af"] = "@function.outer",
-							["if"] = "@function.inner",
-						},
-					},
-				})
-			end,
+			-- 	config = function()
+			-- 		require("nvim-treesitter-textobjects").setup({
+			-- 			select = {
+			-- 				enable = true,
+			-- 				lookahead = true,
+			-- 				keymaps = {
+			-- 					["af"] = "@function.outer",
+			-- 					["if"] = "@function.inner",
+			-- 				},
+			-- 			},
+			-- 		})
+			-- 	end,
 		},
 		{ "nvim-treesitter/nvim-treesitter-context", opts = {} },
 	},

@@ -1,4 +1,4 @@
-local M = {
+local jdtls = {
 	"mfussenegger/nvim-jdtls",
 	ft = "java",
 	opts = function()
@@ -125,6 +125,10 @@ local M = {
 		attach_jdtls()
 	end,
 }
+
+local M = {}
+
+M.plugins = { jdtls }
 
 M.lsp = { jdtls = { autostart = false } }
 M.formatters = { "google-java-format" }

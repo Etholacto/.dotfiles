@@ -70,5 +70,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-package.loaded["plugins.lang.typescript"] = M
-return {}
+return M

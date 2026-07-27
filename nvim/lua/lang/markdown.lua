@@ -1,4 +1,6 @@
-local M = {
+local M = {}
+
+M.plugins = {
 	{
 		"iamcco/markdown-preview.nvim",
 		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },

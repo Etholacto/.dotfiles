@@ -31,12 +31,22 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
+local lang_specs = {}
+for name, ftype in vim.fs.dir(vim.fn.stdpath("config") .. "/lua/lang") do
+	if ftype == "file" and name:match("%.lua$") then
+		local mod = require("lang." .. name:gsub("%.lua$", ""))
+		if mod.plugins then
+			vim.list_extend(lang_specs, mod.plugins)
+		end
+	end
+end
+
 require("lazy").setup({
 	spec = {
 		{ import = "plugins" },
 		{ import = "plugins.code" },
 		{ import = "plugins.git" },
-		{ import = "plugins.lang" },
+		lang_specs,
 	},
 	install = {
 		colorscheme = { "kanagawa" },
@@ -48,6 +58,10 @@ require("lazy").setup({
 	change_detection = {
 		enabled = true,
 		notify = false,
+	},
+	rocks = {
+		enable = false,
+		hererocks = false,
 	},
 })
 
