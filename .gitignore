@@ -21,3 +21,6 @@ wezterm.lua.bak
 
 #Ignore superfile
 /superfile/theme
+
+# Ignore zsh completion dump caches (generated)
+.zcompdump*
