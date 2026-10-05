@@ -60,8 +60,21 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd/mm/yyyy"
 
 # Aliases
-alias ll="ls --color -las"
+# eza (modern ls)
+alias ls="eza --icons=auto --group-directories-first"
+alias ll="eza -la --icons=auto --group-directories-first --git"
+alias la="eza -a --icons=auto --group-directories-first"
+alias lt="eza --tree --level=2 --icons=auto"
 alias c="clear"
+
+# yazi file browser; on quit, cd into the folder you were in
+function fb() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
 
 # Shell integrations
 # source <(fzf --zsh)
